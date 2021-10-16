@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<!-- Settings -->
+	<PF_SettingsCategory>Processor Framework</PF_SettingsCategory>
+	<PF_ShowProcessIcon>Show process icon</PF_ShowProcessIcon>
+	<PF_ShowProcessIconTooltip>If enabled allows showing of process icon on buildings that have it enabled, otherwise will never show icons on buildings (default: true)</PF_ShowProcessIconTooltip>
+	<PF_ProcessIconSize>Process icon size</PF_ProcessIconSize>
+	<PF_ProcessIconSizeTooltip>Sets the size for the process icon that is shown on some processing buildings (default: 60%)</PF_ProcessIconSizeTooltip>
+	<PF_ShowCurrentQualityIcon>Show current quality icon</PF_ShowCurrentQualityIcon>
+	<PF_ShowCurrentQualityIconTooltip>Shows an icon next to the progress bar that indicates the current quality of the product (default: true)</PF_ShowCurrentQualityIconTooltip>
+	<PF_ShowTargetQualityIcon>Show target quality icon</PF_ShowTargetQualityIcon>
+	<PF_ShowTargetQualityIconTooltip>Shows an icon next to the process icon that indicates the target quality set, only works if 'show process icon' is true (default: false)</PF_ShowTargetQualityIconTooltip>
+	<PF_SingleItemIcon>Single item icon</PF_SingleItemIcon>
+	<PF_SingleItemIconTooltip>If enabled will use icons that resemble a single item, otherwise will use icons that resemble a full stack (default: true)</PF_SingleItemIconTooltip>
+	<PF_SortAlphabetically>Sort list alphabetically</PF_SortAlphabetically>
+	<PF_SortAlphabeticallyTooltip>If enabled will sort list when clicking on the button to change process alphabetically, otherwise will sort by thingDef list (default: false)</PF_SortAlphabeticallyTooltip>
+	<PF_ReplaceVanillaBarrels>Replace vanilla barrels</PF_ReplaceVanillaBarrels>
+	<PF_ReplaceVanillaBarrelsTooltip>Replaces all vanilla fermenting barrels for the PF ones, intended to be used after adding PF to an existing game, not multiplayer safe</PF_ReplaceVanillaBarrelsTooltip>
+	<PF_DefaultSettings>Reset to default</PF_DefaultSettings>
+	<PF_DefaultSettingsTooltip>Reset settings to default values</PF_DefaultSettingsTooltip>
+
+	<!-- Universal Fermenter Strings -->
+	<PF_ContainsIngredientsGeneric>Contains {0} / {1} ingredients</PF_ContainsIngredientsGeneric>
+	<PF_ContainsIngredient>Contains {0} / {1} {INGREDIENTS}</PF_ContainsIngredient>
+	<PF_ContainsProduct>Contains {0} / {1} {PRODUCT_label} ({QUALITY})</PF_ContainsProduct>
+	<PF_NoIngredient>Empty</PF_NoIngredient>
+	<PF_Progress>Progress: {0} ({1})</PF_Progress>
+
+	<PF_NumProcessing>{0} {STACKS} processing</PF_NumProcessing>
+  <PF_RunningStacksNoun>stack</PF_RunningStacksNoun>
+	<PF_RunningCountSlow> ({0} slow)</PF_RunningCountSlow>
+	<PF_RunningCountFinished> ({0} finished)</PF_RunningCountFinished>
+	<PF_RunningCountRuined> ({0} ruined)</PF_RunningCountRuined>
+
+	<PF_RunningInfo>Running ({0} complete)</PF_RunningInfo>
+	<PF_RunningSlow>Running slowly: {0} speed ({0} complete)</PF_RunningSlow>
+  <PF_NonIdealInfluences>Non-ideal {0}</PF_NonIdealInfluences>
+	<PF_NonIdealSpeedFactor>Speed: {0}</PF_NonIdealSpeedFactor>
+	<PF_IdealSafeProductionTemperature>Ideal (safe) production temp</PF_IdealSafeProductionTemperature>
+	<PF_Finished>Finished</PF_Finished>
+	<PF_Ideal>Ideal</PF_Ideal>
+	<PF_Safe>Safe</PF_Safe>
+	<PF_Ruined>Ruined</PF_Ruined>
+	<PF_NA>N/A</PF_NA>
+	<PF_None>None</PF_None>
+	
+	<PF_WeatherTemperature>temperature</PF_WeatherTemperature>
+	<PF_WeatherSunshine>sunshine</PF_WeatherSunshine>
+	<PF_WeatherRain>rain</PF_WeatherRain>
+	<PF_WeatherSnow>snow</PF_WeatherSnow>
+	<PF_WeatherWind>wind</PF_WeatherWind>
+
+	<PF_NextDesc>Produce {0} from {1}.</PF_NextDesc>
+	<PF_SetQualityDesc>Set the target quality for the process.</PF_SetQualityDesc>
+
+	<PF_OldBarrelInspectString>Old vanilla barrel, install it anywhere to replace it for universal fermenter</PF_OldBarrelInspectString>
+
+  <PF_ITab_ItemSelection>Processes</PF_ITab_ItemSelection>
+  <PF_ApplySettings>Apply settings</PF_ApplySettings>
+
+</LanguageData>

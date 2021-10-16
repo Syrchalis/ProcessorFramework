@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThingDef ParentName="BuildingBase">
+    <defName>BarrelProcessor</defName>
+    <label>fermenting barrel</label>
+    <description>A barrel for fermenting various things into other products. It is not limited to fermenting a specific thing, so you could call it a "universal fermenter".</description>
+    <thingClass>ProcessorFramework.Building_ColorCoded</thingClass>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <graphicData>
+      <texPath>Things/Building/Production/BarrelProcessor</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <shaderType>CutoutComplex</shaderType>
+      <damageData>
+        <rect>(0.05,0.1,0.9,0.9)</rect>
+      </damageData>
+      <shadowData>
+        <volume>(0.75, 0.35, 0.33)</volume>
+      </shadowData>
+    </graphicData>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.45</fillPercent>
+    <pathCost>60</pathCost>
+    <thingCategories>
+      <li>BuildingsProduction</li>
+    </thingCategories>
+    <statBases>
+      <WorkToBuild>600</WorkToBuild>
+      <Mass>10</Mass>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <costList>
+      <Steel>10</Steel>
+    </costList>
+    <costStuffCount>30</costStuffCount>
+    <stuffCategories>
+      <li>Woody</li>
+    </stuffCategories>
+    <comps>
+      <li Class="ProcessorFramework.CompProperties_Processor">
+        <showProductIcon>true</showProductIcon>
+        <barOffset>(0.0, 0.25)</barOffset>
+        <barScale>(1.0, 1.0)</barScale>
+        <independentProcesses>true</independentProcesses>
+        <parallelProcesses>true</parallelProcesses>
+        <colorCoded>false</colorCoded>
+        <capacity>25</capacity>
+        <processes>
+          <li>Beer</li>
+          <li>Test</li>
+        </processes>
+      </li>
+      <li Class="CompProperties_Forbiddable"/>
+    </comps>
+    <tickerType>Rare</tickerType>
+    <rotatable>true</rotatable>
+    <designationCategory>Production</designationCategory>
+    <researchPrerequisites>
+      <li>Brewing</li>
+    </researchPrerequisites>
+  </ThingDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>Beer</defName>
+    <thingDef>Beer</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>Wort</li>
+      </thingDefs>
+    </ingredientFilter>
+    <usesTemperature>true</usesTemperature>
+    <temperatureSafe>-1.0~32.0</temperatureSafe>
+    <temperatureIdeal>7.0~32.0</temperatureIdeal>
+    <ruinedPerDegreePerHour>2.5</ruinedPerDegreePerHour> <!-- percent per degree per hour -->
+    <speedBelowSafe>0.1</speedBelowSafe>
+    <speedAboveSafe>1.0</speedAboveSafe>
+    <processDays>6</processDays> <!-- in days, 60000 ticks is a day -->
+    <efficiency>1.0</efficiency>
+    <sunFactor>1.0~1.0</sunFactor>
+    <rainFactor>1.0~1.0</rainFactor>
+    <snowFactor>1.0~1.0</snowFactor>
+    <windFactor>1.0~1.0</windFactor>
+    <graphicSuffix></graphicSuffix>
+    <usesQuality>false</usesQuality>
+    <qualityDays>(1, 2, 3, 4, 5, 6, 7)</qualityDays>
+    <customLabel></customLabel>
+  </ProcessorFramework.ProcessDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>Test</defName>
+    <thingDef>RawPotatoes</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>RawRice</li>
+        <li>RawCorn</li>
+        <li>RawBerries</li>
+        <li>RawHops</li>
+        <li>SmokeleafLeaves</li>
+        <li>PsychoidLeaves</li>
+        <li>Chocolate</li>
+      </thingDefs>
+    </ingredientFilter>
+    <processDays>0.01</processDays>
+  </ProcessorFramework.ProcessDef>
+
+  <SoundDef>
+    <defName>PF_Honk</defName>  
+    <maxSimultaneous>5</maxSimultaneous>  
+    <subSounds>
+      <li>
+        <onCamera>True</onCamera>      
+        <grains>
+          <li Class="AudioGrain_Clip">
+            <clipPath>UI/DebugGoose/Honk</clipPath>
+          </li>
+        </grains>      
+        <volumeRange>30~40</volumeRange>
+        <pitchRange>0.9~1.1</pitchRange>
+      </li>
+    </subSounds>
+  </SoundDef>
+
+</Defs>

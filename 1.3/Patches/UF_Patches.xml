@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+	<!-- Soft-removes normal fermenting barrel -->
+	<Operation Class="PatchOperationRemove">
+	  <xpath>Defs/ThingDef[defName = "FermentingBarrel"]/designationCategory</xpath>
+	</Operation>
+
+	<!-- Instead of removing the WorkGiver class gets replaced so it doesn't scan the map anymore -->
+	<Operation Class="PatchOperationReplace">
+	  <xpath>Defs/WorkGiverDef[defName = "TakeBeerOutOfFermentingBarrel" or defName = "FillFermentingBarrel"]/giverClass</xpath>
+		<value>
+			<giverClass>WorkGiver_DoBill</giverClass>
+		</value>
+	</Operation>
+
+	<!-- Allow Brewery to be made of stuff -->
+	<Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Brewery"]/costList/WoodLog</xpath>
+    <match Class="PatchOperationRemove">
+			<xpath>Defs/ThingDef[defName="Brewery"]/costList/WoodLog</xpath>
+    </match>
+  </Operation>
+
+	<Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Brewery"]/constructEffect</xpath>
+    <match Class="PatchOperationRemove">
+			<xpath>Defs/ThingDef[defName="Brewery"]/constructEffect</xpath>
+    </match>
+  </Operation>
+	
+	<Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Brewery"]/costStuffCount</xpath>
+    <nomatch Class="PatchOperationAdd">
+			<xpath>Defs/ThingDef[defName="Brewery"]</xpath>
+			<value>
+				<costStuffCount>120</costStuffCount>
+			</value>
+    </nomatch>
+		<match Class="PatchOperationReplace">
+			<xpath>Defs/ThingDef[defName="Brewery"]/costStuffCount</xpath>
+			<value>
+				<costStuffCount>120</costStuffCount>
+			</value>
+    </match>
+  </Operation>
+
+	<Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName="Brewery"]/stuffCategories</xpath>
+    <nomatch Class="PatchOperationAdd">
+			<xpath>Defs/ThingDef[defName="Brewery"]</xpath>
+			<value>
+				<stuffCategories>
+					<li>Woody</li>
+				</stuffCategories>
+			</value>
+    </nomatch>
+		<match Class="PatchOperationReplace">
+			<xpath>Defs/ThingDef[defName="Brewery"]/stuffCategories</xpath>
+			<value>
+				<stuffCategories>
+					<li>Woody</li>
+				</stuffCategories>
+			</value>
+    </match>
+  </Operation>
+
+	<!-- checks for old namespace-->
+	<Operation Class="PatchOperationAttributeSet">
+		<success>Always</success>
+	  <xpath>Defs/ThingDef/comps/li[contains(@Class,'UniversalProcessors.CompProperties_UniversalFermenter')]</xpath>
+		<attribute>Class</attribute>
+		<value>UniversalFermenter.CompProperties_UniversalFermenter</value>
+	</Operation>
+
+</Patch>

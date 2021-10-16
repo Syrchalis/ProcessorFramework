@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<JobDef>
+		<defName>FillProcessor</defName>
+		<driverClass>ProcessorFramework.JobDriver_FillProcessor</driverClass>
+		<reportString>filling TargetA.</reportString>
+		<suspendable>false</suspendable>
+		<allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+	</JobDef>
+	
+	<JobDef>
+		<defName>EmptyProcessor</defName>
+		<driverClass>ProcessorFramework.JobDriver_EmptyProcessor</driverClass>
+		<reportString>taking product out of TargetA.</reportString>
+		<suspendable>false</suspendable>
+		<allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+	</JobDef>
+
+</Defs>
