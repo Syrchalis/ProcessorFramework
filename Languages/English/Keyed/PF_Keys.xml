@@ -15,12 +15,20 @@
 	<PF_SingleItemIconTooltip>If enabled will use icons that resemble a single item, otherwise will use icons that resemble a full stack (default: true)</PF_SingleItemIconTooltip>
 	<PF_SortAlphabetically>Sort list alphabetically</PF_SortAlphabetically>
 	<PF_SortAlphabeticallyTooltip>If enabled will sort list when clicking on the button to change process alphabetically, otherwise will sort by thingDef list (default: false)</PF_SortAlphabeticallyTooltip>
+  <PF_defaultQuality>Default target quality</PF_defaultQuality>
+  <PF_defaultQualityTooltip>Which target quality is set by default for processes that use quality</PF_defaultQualityTooltip>
 	<PF_ReplaceVanillaBarrels>Replace vanilla barrels</PF_ReplaceVanillaBarrels>
 	<PF_ReplaceVanillaBarrelsTooltip>Replaces all vanilla fermenting barrels for the PF ones, intended to be used after adding PF to an existing game, not multiplayer safe</PF_ReplaceVanillaBarrelsTooltip>
 	<PF_DefaultSettings>Reset to default</PF_DefaultSettings>
 	<PF_DefaultSettingsTooltip>Reset settings to default values</PF_DefaultSettingsTooltip>
 
-	<!-- Universal Fermenter Strings -->
+  <!-- Gizmos -->
+  <PF_emptyNow>Designates this processor to be emptied</PF_emptyNow>
+  <PF_emptyNowDescription>Designates this processor to be emptied by colonists, no matter what quality has been reached</PF_emptyNowDescription>
+  <PF_dontEmpty>Cancel empty designation</PF_dontEmpty>
+  <PF_dontEmptyDescription>Cancels the designation for this processor to be emptied</PF_dontEmptyDescription>
+
+	<!-- Inspector Strings -->
 	<PF_ContainsIngredientsGeneric>Contains {0} / {1} ingredients</PF_ContainsIngredientsGeneric>
 	<PF_ContainsIngredient>Contains {0} / {1} {INGREDIENTS}</PF_ContainsIngredient>
 	<PF_ContainsProduct>Contains {0} / {1} {PRODUCT_label} ({QUALITY})</PF_ContainsProduct>
@@ -56,7 +64,29 @@
 
 	<PF_OldBarrelInspectString>Old vanilla barrel, install it anywhere to replace it for universal fermenter</PF_OldBarrelInspectString>
 
+  <!-- ITab Process Selection -->
   <PF_ITab_ItemSelection>Processes</PF_ITab_ItemSelection>
   <PF_ApplySettings>Apply settings</PF_ApplySettings>
+
+  <!-- ITab Process Contents -->
+  <PF_TabProductFilter>Product</PF_TabProductFilter>
+	<PF_TabIngredientFilter>Filter</PF_TabIngredientFilter>
+	<PF_TabContents>Contents</PF_TabContents>
+	<PF_FermentingItems>Processing Items</PF_FermentingItems>
+	<PF_Product>Product</PF_Product>
+	<PF_TargetQuality>Target</PF_TargetQuality>
+  <PF_CreatingTooltip1>Creating {PRODUCT}{QUALITY} from {INGREDIENT}.\n</PF_CreatingTooltip1>
+	<PF_CreatingTooltip2_Quality>\nProcessing time to Awful quality: {TOAWFUL}.\n</PF_CreatingTooltip2_Quality>
+	<PF_CreatingTooltip2_NoQuality>\nProcessing time: {TIME}.\n</PF_CreatingTooltip2_NoQuality>
+	<PF_CreatingTooltip3>\nIdeal running temperature: {MIN}~{MAX}.\n</PF_CreatingTooltip3>
+	<PF_CreatingTooltip4>Safe temperature: {MIN}~{MAX}.\nSpoilage rate: {PERHOUR} / degree / hr\n</PF_CreatingTooltip4>
+	<PF_CreatingTooltip5>\nProduct is {0} spoiled.\n</PF_CreatingTooltip5>
+	<PF_CreatingTooltip6>Spoiling now! Temperature is {0}!</PF_CreatingTooltip6>
+	<PF_SpeedTooltip1>{COMPLETEPERCENT} complete\nSpeed: {SPEED}\n\n</PF_SpeedTooltip1>
+	<PF_SpeedTooltip2>Speed factors:\nTemperature: {TEMPERATURE}\nWind: {WIND}\nSun: {SUN}\nRain: {RAIN}\nSnow: {SNOW}\n\n</PF_SpeedTooltip2>
+	<PF_SpeedTooltip3>Estimated completion in: {ESTIMATED}</PF_SpeedTooltip3>
+	<PF_QualityTooltip1>Current quality: {CURRENT}\nTarget quality: {TARGET}\n\n</PF_QualityTooltip1>
+	<PF_QualityTooltip2>Processing time for\nAwful: {AWFUL}\nPoor: {POOR}\nNormal: {NORMAL}\nGood: {GOOD}\nExcellent: {EXCELLENT}\nMasterwork: {MASTERWORK}\nLegendary: {LEGENDARY}</PF_QualityTooltip2>
+	<PF_QualityTooltipNA>{PRODUCT_label} is always the same quality.</PF_QualityTooltipNA>
 
 </LanguageData>

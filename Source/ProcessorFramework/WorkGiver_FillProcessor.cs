@@ -34,9 +34,15 @@ namespace ProcessorFramework
         public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
             CompProcessor comp = t.TryGetComp<CompProcessor>();
-            if (comp == null || comp.SpaceLeft <= 0)
+
+            if (comp == null) return false;
+            if (!comp.EnabledProcesses.EnumerableNullOrEmpty())
             {
-                return false;
+                float minFactor = comp.EnabledProcesses.MinBy(x => x.capacityFactor).capacityFactor;
+                if (comp.SpaceLeft < minFactor)
+                {
+                    return false;
+                }
             }
             if (!comp.TemperatureOk)
             {

@@ -53,7 +53,7 @@ namespace ProcessorFramework
                 }
             }
         }
-    }
+    }*/
 
     public class Command_Quality : Command_Action
     {
@@ -69,7 +69,7 @@ namespace ProcessorFramework
                     qualityfloatMenuOptions.Add(
                         new FloatMenuOption(
                             quality.GetLabel(),
-                            () => ChangeQuality(qualityToTarget,quality),
+                            () => ChangeQuality(qualityToTarget, quality),
                             (Texture2D)ProcessorFramework_Utility.qualityMaterials[quality].mainTexture,
                             Color.white,
                             MenuOptionPriority.Default,
@@ -87,12 +87,18 @@ namespace ProcessorFramework
 
         internal static void ChangeQuality(QualityCategory qualityToTarget, QualityCategory quality)
         {
-            foreach (Thing thing in Find.Selector.SelectedObjects.OfType<Thing>()) {
+            foreach (Thing thing in Find.Selector.SelectedObjects.OfType<Thing>()) 
+            {
                 CompProcessor comp = thing.TryGetComp<CompProcessor>();
-                if (comp != null && comp.CurrentProcess.usesQuality && comp.TargetQuality == qualityToTarget) {
-                    comp.TargetQuality = quality;
+                if (comp != null && comp.activeProcesses.Any(x => x.processDef.usesQuality)) 
+                {
+                    foreach (ActiveProcess activeProcess in comp.activeProcesses.Where(x => x.TargetQuality == qualityToTarget))
+                    {
+                        activeProcess.TargetQuality = quality;
+                        comp.cachedTargetQualities[activeProcess.processDef] = quality;
+                    }
                 }
             }
         }
-    }*/
+    }
 }

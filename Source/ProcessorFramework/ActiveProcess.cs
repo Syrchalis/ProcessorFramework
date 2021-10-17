@@ -42,7 +42,8 @@ namespace ProcessorFramework
         }
         public float ActiveProcessDays => (float)ActiveProcessTicks / GenDate.TicksPerDay;
         public float ActiveProcessPercent => Mathf.Clamp01(ActiveProcessDays / (processDef.usesQuality ? DaysToReachTargetQuality : processDef.processDays));
-        public bool Complete => ActiveProcessPercent >= 1f;
+        public bool Complete => ActiveProcessPercent >= 1f || EmptyNow;
+        public bool EmptyNow => processDef.usesQuality && ActiveProcessDays >= processDef.qualityDays.awful && processor.emptyNow;
         public bool Ruined => ruinedPercent >= 1f;
         public float SpeedFactor => speedFactor;
         public Map CurrentMap => processor.parent.Map;
@@ -255,6 +256,89 @@ namespace ProcessorFramework
                     CurrentMap.windManager.WindSpeed);
             }
         }
+        public string ProgressTooltip
+        {
+            get
+            {
+                StringBuilder progressTip = new StringBuilder();
+                progressTip.AppendTagged("PF_SpeedTooltip1".Translate(ActiveProcessPercent.ToStringPercent().Named("COMPLETEPERCENT"), SpeedFactor.ToStringPercentColored().Named("SPEED")));
+                progressTip.AppendTagged("PF_SpeedTooltip2".Translate(
+                    CurrentTemperatureFactor.ToStringPercentColored().Named("TEMPERATURE"),
+                    CurrentWindFactor.ToStringPercentColored().Named("WIND"),
+                    CurrentRainFactor.ToStringPercentColored().Named("RAIN"),
+                    CurrentSnowFactor.ToStringPercentColored().Named("SNOW"),
+                    CurrentSunFactor.ToStringPercentColored().Named("SUN")));
+
+                if (!Complete)
+                    progressTip.AppendTagged("PF_SpeedTooltip3".Translate(EstimatedTicksLeft.ToStringTicksToPeriod(canUseDecimals: false).Named("ESTIMATED")));
+
+                return progressTip.ToString();
+            }
+        }
+        public string QualityTooltip
+        {
+            get
+            {
+                if (!processDef.usesQuality)
+                    return "PF_QualityTooltipNA".Translate(processDef.thingDef.Named("PRODUCT")).CapitalizeFirst();
+
+                StringBuilder qualityTip = new StringBuilder();
+
+                qualityTip.AppendTagged("PF_QualityTooltip1".Translate(
+                    ActiveProcessDays < processDef.qualityDays.awful
+                        ? "PF_None".TranslateSimple().Named("CURRENT")
+                        : CurrentQuality.GetLabel().Named("CURRENT"),
+                    TargetQuality.GetLabel().Named("TARGET")));
+
+                qualityTip.AppendTagged("PF_QualityTooltip2".Translate(
+                    Mathf.RoundToInt(processDef.qualityDays.awful * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("AWFUL"),
+                    Mathf.RoundToInt(processDef.qualityDays.poor * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("POOR"),
+                    Mathf.RoundToInt(processDef.qualityDays.normal * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("NORMAL"),
+                    Mathf.RoundToInt(processDef.qualityDays.good * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("GOOD"),
+                    Mathf.RoundToInt(processDef.qualityDays.excellent * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("EXCELLENT"),
+                    Mathf.RoundToInt(processDef.qualityDays.masterwork * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("MASTERWORK"),
+                    Mathf.RoundToInt(processDef.qualityDays.legendary * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("LEGENDARY")
+                ));
+
+                return qualityTip.ToString();
+            }
+        }
+        public string ProcessTooltip(string ingredientLabel, string productLabel)
+        {
+            StringBuilder creatingTip = new StringBuilder();
+
+            string qualityStr = processDef.usesQuality ? $" ({TargetQuality.GetLabel().CapitalizeFirst()})" : "";
+
+            creatingTip.AppendTagged("PF_CreatingTooltip1".Translate(productLabel.Named("PRODUCT"), ingredientLabel.Named("INGREDIENT"), qualityStr.Named("QUALITY")));
+            creatingTip.AppendTagged(processDef.usesQuality
+                ? "processDef".Translate(Mathf.RoundToInt(processDef.qualityDays.awful * GenDate.TicksPerDay).ToStringTicksToPeriod().Named("TOAWFUL"))
+                : "PF_CreatingTooltip2_NoQuality".Translate(Mathf.RoundToInt(processDef.processDays * GenDate.TicksPerDay).ToStringTicksToPeriod().Named("TIME")));
+
+            if (processDef.usesTemperature)
+            {
+                creatingTip.AppendTagged("PF_CreatingTooltip3".Translate(
+                    processDef.temperatureIdeal.min.ToStringTemperature().Named("MIN"),
+                    processDef.temperatureIdeal.max.ToStringTemperature().Named("MAX")));
+                creatingTip.AppendTagged("PF_CreatingTooltip4".Translate(
+                    processDef.temperatureSafe.min.ToStringTemperature().Named("MIN"),
+                    processDef.temperatureSafe.max.ToStringTemperature().Named("MAX"),
+                    (processDef.ruinedPerDegreePerHour / 100f).ToStringPercent().Named("PERHOUR")
+                ));
+            }
+
+            if (ruinedPercent > 0.05f)
+            {
+                creatingTip.AppendTagged("PF_CreatingTooltip5".Translate(ruinedPercent.ToStringPercent().Colorize(Color.red)));
+            }
+
+            if (!processDef.temperatureSafe.Includes(processor.parent.AmbientTemperature) && !Ruined)
+            {
+                creatingTip.Append("PF_CreatingTooltip6".Translate(processor.parent.AmbientTemperature.ToStringTemperature()).Resolve().Colorize(Color.red));
+            }
+
+            return creatingTip.ToString();
+        }
+
 
         public Material ProgressColorMaterial
         {

@@ -11,7 +11,7 @@ using Verse.Sound;
 namespace ProcessorFramework
 {
     [HotSwappable]
-    public class ITab_ItemSelection : ITab
+    public class ITab_ProcessSelection : ITab
     {
         private Vector2 scrollPosition;
         private Dictionary<ProcessDef, bool> categoryOpen = new Dictionary<ProcessDef, bool>();
@@ -22,7 +22,7 @@ namespace ProcessorFramework
         private bool callbackActive = false;
         //The cachedThing is set at the end of FillTab and compared at the start, allowing the method to detect when the basis for the filters changed, thus resetting the filters
 
-        public ITab_ItemSelection()
+        public ITab_ProcessSelection()
         {
             labelKey = "PF_ITab_ItemSelection";
             size = new Vector2(300, 400);
@@ -149,12 +149,24 @@ namespace ProcessorFramework
                 return;
             }
             callbackActive = true;
-            localIngredientFilter.SetDisallowAll();
             foreach (ProcessDef processDef in EnabledProcesses)
             {
-                foreach (ThingDef thingDef in processDef.ingredientFilter.AllowedThingDefs)
+                if (!processDef.ingredientFilter.AllowedThingDefs.SharesElementWith(localIngredientFilter.AllowedThingDefs))
                 {
-                    localIngredientFilter.SetAllow(thingDef, true);
+                    foreach (ThingDef thingDef in processDef.ingredientFilter.AllowedThingDefs)
+                    {
+                        localIngredientFilter.SetAllow(thingDef, true);
+                    }
+                }
+            }
+            foreach (ProcessDef processDef in processors.First().Props.processes.Except(EnabledProcesses))
+            {
+                if (processDef.ingredientFilter.AllowedThingDefs.SharesElementWith(localIngredientFilter.AllowedThingDefs))
+                {
+                    foreach (ThingDef thingDef in processDef.ingredientFilter.AllowedThingDefs)
+                    {
+                        localIngredientFilter.SetAllow(thingDef, false);
+                    }
                 }
             }
             callbackActive = false;

@@ -13,15 +13,15 @@ namespace ProcessorFramework
         public ThingDef thingDef;
 		public ThingFilter ingredientFilter = new ThingFilter();
 
+        public float processDays = 6f;
+        public float capacityFactor = 1;
+        public float efficiency = 1f;
         public bool usesTemperature = true;
 		public FloatRange temperatureSafe = new FloatRange(-1f, 32f);
 		public FloatRange temperatureIdeal = new FloatRange(7f, 32f);
 		public float ruinedPerDegreePerHour = 2.5f;
         public float speedBelowSafe = 0.1f;
         public float speedAboveSafe = 1f;
-        public float processDays = 6f;
-		public int capacityFactor = 1;
-		public float efficiency = 1f;
 		public FloatRange sunFactor = new FloatRange(1f, 1f);
 		public FloatRange rainFactor = new FloatRange(1f, 1f);
 		public FloatRange snowFactor = new FloatRange(1f, 1f);

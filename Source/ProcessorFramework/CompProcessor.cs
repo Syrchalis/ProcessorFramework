@@ -14,7 +14,9 @@ namespace ProcessorFramework
     public class CompProcessor : ThingComp, IThingHolder
     {
         public List<ActiveProcess> activeProcesses = new List<ActiveProcess>();
-        
+        public Dictionary<ProcessDef, QualityCategory> cachedTargetQualities = new Dictionary<ProcessDef, QualityCategory>();
+        public bool emptyNow = false;
+
         public bool graphicChangeQueued = false;
 
         public CompRefuelable refuelComp;
@@ -35,7 +37,7 @@ namespace ProcessorFramework
         public bool Empty => TotalIngredientCount <= 0;
         public bool AnyComplete => activeProcesses.Any(x => x.Complete);
         public int SpaceLeft => Props.capacity - TotalIngredientCount;
-        public int TotalIngredientCount => activeProcesses.Sum(x => x.ingredientCount);
+        public int TotalIngredientCount => Mathf.CeilToInt(activeProcesses.Sum(x => x.ingredientCount * x.processDef.capacityFactor));
         public IEnumerable<ProcessDef> EnabledProcesses
         {
             get
@@ -104,12 +106,9 @@ namespace ProcessorFramework
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
-            refuelComp = parent.GetComp<CompRefuelable>();
-            powerTradeComp = parent.GetComp<CompPowerTrader>();
-            flickComp = parent.GetComp<CompFlickable>();
             innerContainer = new ThingOwner<Thing>(this);
-            productFilter = new ThingFilter(ProductFilterCallback);
-            ingredientFilter = new ThingFilter(IngredientFilterCallback);
+            productFilter = new ThingFilter();
+            ingredientFilter = new ThingFilter();
 
             foreach (ProcessDef processDef in Props.processes)
             {
@@ -121,15 +120,19 @@ namespace ProcessorFramework
             }
 
             parent.def.inspectorTabsResolved ??= new List<InspectTabBase>();
-            if (!parent.def.inspectorTabsResolved.Any(t => t is ITab_ItemSelection))
+            if (!parent.def.inspectorTabsResolved.Any(t => t is ITab_ProcessSelection))
             {
-                parent.def.inspectorTabsResolved.Add(InspectTabManager.GetSharedInstance(typeof(ITab_ItemSelection)));
+                parent.def.inspectorTabsResolved.Add(InspectTabManager.GetSharedInstance(typeof(ITab_ProcessSelection)));
+                parent.def.inspectorTabsResolved.Add(InspectTabManager.GetSharedInstance(typeof(ITab_ProcessorContents)));
             }
         }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
+            refuelComp = parent.GetComp<CompRefuelable>();
+            powerTradeComp = parent.GetComp<CompPowerTrader>();
+            flickComp = parent.GetComp<CompFlickable>();
             parent.Map.GetComponent<MapComponent_Processors>().Register(parent);
             if (!Empty)
             {
@@ -163,6 +166,18 @@ namespace ProcessorFramework
             {
                 yield return c;
             }
+            if (activeProcesses.Any(x => x.processDef.usesQuality))
+            {
+                if (emptyNow)
+                {
+                    yield return ProcessorFramework_Utility.dontEmptyGizmo;
+                }
+                else
+                {
+                    yield return ProcessorFramework_Utility.emptyNowGizmo;
+                }
+                yield return ProcessorFramework_Utility.qualityGizmos[activeProcesses.First(x => x.processDef.usesQuality).TargetQuality];
+            }
         }
 
         public override void PostDraw()
@@ -190,7 +205,7 @@ namespace ProcessorFramework
                 for (int i = 0; i < activeProcesses.Count; i++)
                 {
                     ActiveProcess activeProcess = activeProcesses[i];
-                    float width = size.x * ((float)activeProcess.ingredientCount / Props.capacity);
+                    float width = size.x * ((float)activeProcess.ingredientCount * activeProcess.processDef.capacityFactor / Props.capacity);
                     float xPos = (drawPos.x - (size.x / 2.0f)) + (width / 2.0f) + xPosAccum;
                     xPosAccum += width;
                     Graphics.DrawMesh(MeshPool.plane10, Matrix4x4.TRS(new Vector3(xPos, drawPos.y + 0.01f, drawPos.z), Quaternion.identity, new Vector3(width, 1, size.y)), activeProcess.ProgressColorMaterial, 0);
@@ -205,7 +220,7 @@ namespace ProcessorFramework
                     Graphics.DrawMesh(MeshPool.plane10, matrix2, ProcessorFramework_Utility.qualityMaterials[activeProcesses[0].CurrentQuality], 0);
                 }
             }
-            if (!activeProcesses.NullOrEmpty() && Props.showProductIcon && PF_Settings.showProcessIconGlobal)
+            if (!activeProcesses.NullOrEmpty() && Props.showProductIcon && PF_Settings.showProcessIconGlobal && parent.Map.designationManager.DesignationOn(parent) == null && !emptyNow)
             {
                 Vector3 drawPos = parent.DrawPos;
                 float sizeX = PF_Settings.processIconSize * Props.productIconSize.x;
@@ -221,7 +236,7 @@ namespace ProcessorFramework
                 else if (!Empty) // show process icon if object has more than one process
                 {
                     IEnumerable<ProcessDef> uniqueProcessDefs = activeProcesses.GroupBy(x => x.processDef).Select(x => x.Key);
-                    drawPos.y += 0.02f;
+                    drawPos.y += 0.2f;
                     drawPos.z += 0.05f;
                     drawPos.x -= (uniqueProcessDefs.Count() - 1) * sizeX * 0.25f;
                     foreach (ProcessDef processDef in uniqueProcessDefs)
@@ -242,6 +257,12 @@ namespace ProcessorFramework
                         Graphics.DrawMesh(MeshPool.plane10, matrix2, ProcessorFramework_Utility.qualityMaterials[activeProcesses[0].TargetQuality], 0);
                     }*/
                 }
+            }
+            if (emptyNow)
+            {
+                Matrix4x4 matrix = default;
+                matrix.SetTRS(parent.DrawPos + new Vector3(0f, 0.3f, 0f), Quaternion.identity, new Vector3(0.8f, 1f, 0.8f));
+                Graphics.DrawMesh(MeshPool.plane10, matrix, MaterialPool.MatFrom(ProcessorFramework_Utility.emptyNowDesignation), 0);
             }
         }
 
@@ -340,7 +361,7 @@ namespace ProcessorFramework
                 processDef = processDef,
                 ingredientCount = ingredient.stackCount,
                 ingredientThings = new List<Thing> { ingredient },
-                //targetQuality = 
+                targetQuality = cachedTargetQualities.ContainsKey(processDef) ? cachedTargetQualities[processDef] : (QualityCategory)PF_Settings.defaultTargetQualityInt
             });
             innerContainer.TryAddOrTransfer(ingredient, false);
             
@@ -377,14 +398,14 @@ namespace ProcessorFramework
                 }
 
                 //Quality
-                /*if (activeProcess.processDef.usesQuality)
+                if (activeProcess.processDef.usesQuality)
                 {
                     CompQuality compQuality = thing.TryGetComp<CompQuality>();
                     if (compQuality != null)
                     {
-                        compQuality.SetQuality(CurrentQuality, ArtGenerationContext.Colony);
+                        compQuality.SetQuality(activeProcess.CurrentQuality, ArtGenerationContext.Colony);
                     }
-                }*/
+                }
             }
 
             if (Empty)
@@ -397,59 +418,16 @@ namespace ProcessorFramework
                 ingredient.Destroy();
             }
             activeProcesses.Remove(activeProcess);
+            if (!activeProcesses.Any(x => x.processDef.usesQuality))
+            {
+                emptyNow = false;
+            }
             return thing;
-        }
-
-        public void ProductFilterCallback()
-        {
-            if (callbackActive)
-            {
-                return;
-            }
-            callbackActive = true;
-            ingredientFilter.SetDisallowAll();
-            foreach (ProcessDef processDef in EnabledProcesses)
-            {
-                foreach (ThingDef thingDef in processDef.ingredientFilter.AllowedThingDefs)
-                {
-                    ingredientFilter.SetAllow(thingDef, true);
-                }
-            }
-            callbackActive = false;
-        }
-
-        public void IngredientFilterCallback()
-        {
-            if (callbackActive)
-            {
-                return;
-            }
-            callbackActive = true;
-            foreach (ThingDef ingredient in ingredientFilter.AllowedThingDefs)
-            {
-                ThingDef relatedProduct = Props.processes.Find(x => x.ingredientFilter.Allows(ingredient)).thingDef;
-                if (!productFilter.Allows(relatedProduct))
-                {
-                    productFilter.SetAllow(relatedProduct, true);
-                }
-            }
-            List<ThingDef> productsToDisable = new List<ThingDef>();
-            foreach (ProcessDef processDef in EnabledProcesses)
-            {
-                if (!ingredientFilter.AllowedThingDefs.SharesElementWith(processDef.ingredientFilter.AllowedThingDefs))
-                {
-                    productsToDisable.Add(processDef.thingDef);
-                }
-            }
-            foreach (ThingDef product in productsToDisable)
-            {
-                productFilter.SetAllow(product, false);
-            }
-            callbackActive = false;
         }
 
         public void GraphicChange(bool toEmpty)
         {
+            if (parent is Pawn) return;
             string texPath = parent.def.graphicData.texPath;
             if (!toEmpty)
             {
@@ -473,18 +451,18 @@ namespace ProcessorFramework
                 if (!Props.independentProcesses && activeProcesses.Count == 1 && singleDef.usesQuality && activeProcesses[0].ActiveProcessDays >= singleDef.qualityDays.awful)
                 {
                     ActiveProcess progress = activeProcesses[0];
-                    str.AppendTagged("PF_ContainsProduct".Translate(Props.capacity - SpaceLeft, Props.capacity, singleDef.thingDef.Named("PRODUCT"), progress.CurrentQuality.GetLabel().ToLower().Named("QUALITY")));
+                    str.AppendTagged("PF_ContainsProduct".Translate(TotalIngredientCount, Props.capacity, singleDef.thingDef.Named("PRODUCT"), progress.CurrentQuality.GetLabel().ToLower().Named("QUALITY")));
                 }
                 else
                 {
                     // Usually this will only be one def label shown
                     string ingredientLabels = singleDef.ingredientFilter.AllowedThingDefs.Select(d => d.label).Join();
-                    str.AppendTagged("PF_ContainsIngredient".Translate(Props.capacity - SpaceLeft, Props.capacity, ingredientLabels.Named("INGREDIENTS")));
+                    str.AppendTagged("PF_ContainsIngredient".Translate(TotalIngredientCount, Props.capacity, ingredientLabels.Named("INGREDIENTS")));
                 }
             }
             else
             {
-                str.AppendTagged("PF_ContainsIngredientsGeneric".Translate(Props.capacity - SpaceLeft, Props.capacity));
+                str.AppendTagged("PF_ContainsIngredientsGeneric".Translate(TotalIngredientCount, Props.capacity));
             }
 
             str.AppendLine();

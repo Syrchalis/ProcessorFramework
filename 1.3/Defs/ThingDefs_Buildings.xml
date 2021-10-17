@@ -71,21 +71,25 @@
         <li>Wort</li>
       </thingDefs>
     </ingredientFilter>
+    <processDays>6</processDays> <!-- in days, 60000 ticks is a day -->
+    <capacityFactor>1</capacityFactor>
+    <efficiency>1.0</efficiency>
     <usesTemperature>true</usesTemperature>
     <temperatureSafe>-1.0~32.0</temperatureSafe>
     <temperatureIdeal>7.0~32.0</temperatureIdeal>
     <ruinedPerDegreePerHour>2.5</ruinedPerDegreePerHour> <!-- percent per degree per hour -->
     <speedBelowSafe>0.1</speedBelowSafe>
     <speedAboveSafe>1.0</speedAboveSafe>
-    <processDays>6</processDays> <!-- in days, 60000 ticks is a day -->
-    <efficiency>1.0</efficiency>
     <sunFactor>1.0~1.0</sunFactor>
     <rainFactor>1.0~1.0</rainFactor>
     <snowFactor>1.0~1.0</snowFactor>
     <windFactor>1.0~1.0</windFactor>
+    <unpoweredFactor>0.0</unpoweredFactor>
+    <unfueledFactor>0.0</unfueledFactor>
     <graphicSuffix></graphicSuffix>
     <usesQuality>false</usesQuality>
     <qualityDays>(1, 2, 3, 4, 5, 6, 7)</qualityDays>
+    <color>(255, 255, 255)</color> <!-- 0-255 or 0.0-1.0 -->
     <customLabel></customLabel>
   </ProcessorFramework.ProcessDef>
 
@@ -103,7 +107,10 @@
         <li>Chocolate</li>
       </thingDefs>
     </ingredientFilter>
-    <processDays>0.01</processDays>
+    <processDays>0.1</processDays>
+    <efficiency>1</efficiency>
+    <usesQuality>true</usesQuality>
+    <qualityDays>(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7)</qualityDays>
   </ProcessorFramework.ProcessDef>
 
   <SoundDef>

@@ -66,6 +66,7 @@
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -76,7 +77,8 @@
     <Compile Include="CompProcessor.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="DefOf.cs" />
-    <Compile Include="ITab_ItemSelection.cs" />
+    <Compile Include="ITab_ProcessSelection.cs" />
+    <Compile Include="ITab_ProcessorContents.cs" />
     <Compile Include="JobDriver_FillProcessor.cs" />
     <Compile Include="JobDriver_EmptyProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

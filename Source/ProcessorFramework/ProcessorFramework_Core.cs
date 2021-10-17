@@ -36,6 +36,9 @@ namespace ProcessorFramework
                 listing_Standard.CheckboxLabeled("PF_ShowCurrentQualityIcon".Translate(), ref PF_Settings.showCurrentQualityIcon, "PF_ShowCurrentQualityIconTooltip".Translate());
                 listing_Standard.Gap(12);
                 listing_Standard.CheckboxLabeled("PF_ShowTargetQualityIcon".Translate(), ref PF_Settings.showTargetQualityIcon, "PF_ShowTargetQualityTooltip".Translate());
+                listing_Standard.Gap(12);
+                listing_Standard.Label("PF_defaultQuality".Translate() + ": " + ((QualityCategory)PF_Settings.defaultTargetQualityInt).GetLabel() , tooltip: "PF_defaultQualityTooltip".Translate());
+                PF_Settings.defaultTargetQualityInt = Mathf.RoundToInt(listing_Standard.Slider(PF_Settings.defaultTargetQualityInt, 0, 6));
                 listing_Standard.GapLine(30);
                 Rect rectReplaceBarrels = listing_Standard.GetRect(30f);
                 TooltipHandler.TipRegion(rectReplaceBarrels, "PF_ReplaceVanillaBarrelsTooltip".Translate());
@@ -140,6 +143,7 @@ namespace ProcessorFramework
         public static bool showTargetQualityIcon = false;
         public static bool singleItemIcon = true;
         public static bool sortAlphabetically = false;
+        public static int defaultTargetQualityInt = 0;
         public override void ExposeData()
         {
             base.ExposeData();
@@ -149,6 +153,7 @@ namespace ProcessorFramework
             Scribe_Values.Look<bool>(ref showTargetQualityIcon, "PF_showTargetQualityIcon", false, true);
             Scribe_Values.Look<bool>(ref singleItemIcon, "PF_singleItemIcon", true, true);
             Scribe_Values.Look<bool>(ref sortAlphabetically, "PF_sortAlphabetically", false, true);
+            Scribe_Values.Look<int>(ref defaultTargetQualityInt, "PF_defaultTargetQualityInt", 0, false);
         }
     }
 }

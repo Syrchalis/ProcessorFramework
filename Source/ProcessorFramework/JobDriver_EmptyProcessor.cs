@@ -48,27 +48,39 @@ namespace ProcessorFramework
 					ActiveProcess activeProcess = comp.activeProcesses.Find(x => x.Complete || x.Ruined);
 					Thing product = comp.TakeOutProduct(activeProcess);
 
-					if (product == null)
+					if (product == null || product.stackCount == 0)
                     {
 						EndJobWith(JobCondition.Succeeded);
 						return;
                     }
-
-                    GenPlace.TryPlaceThing(product, pawn.Position, Map, ThingPlaceMode.Near);
-                    StoragePriority storagePriority = StoreUtility.CurrentStoragePriorityOf(product);
-
-                // Try to find a suitable storage spot for the product
-                if (StoreUtility.TryFindBestBetterStoreCellFor(product, pawn, Map, storagePriority, pawn.Faction, out IntVec3 c))
+					//This is very stupid, but you can produce pawns like muffalos as product and it works
+					if (product.def.race != null)
                     {
-                        job.SetTarget(ProductToHaulInd, product);
-                        job.count = product.stackCount;
-                        job.SetTarget(StorageCellInd, c);
+						for (int i = 0; i < product.stackCount; i++)
+                        {
+							PawnGenerationRequest request = new PawnGenerationRequest(product.def.race.AnyPawnKind, Faction.OfPlayerSilentFail, PawnGenerationContext.NonPlayer, -1, false, true, false, false, true, false, 1f, false, true, true, true, false, false, false, false, 0f, 0f, null, 1f, null, null, null, null, null, null, null, null, null, null, null, null, null, false, false, false);
+							Pawn productPawn = PawnGenerator.GeneratePawn(request);
+							GenSpawn.Spawn(productPawn, pawn.Position, Map);
+						}
+						EndJobWith(JobCondition.Succeeded);
                     }
-                // If there is no spot to store the product, end this job
-                else
+					else
                     {
-                        EndJobWith(JobCondition.Incompletable);
-                    }
+						GenPlace.TryPlaceThing(product, pawn.Position, Map, ThingPlaceMode.Near);
+						StoragePriority storagePriority = StoreUtility.CurrentStoragePriorityOf(product);
+						// Try to find a suitable storage spot for the product
+						if (StoreUtility.TryFindBestBetterStoreCellFor(product, pawn, Map, storagePriority, pawn.Faction, out IntVec3 c))
+						{
+							job.SetTarget(ProductToHaulInd, product);
+							job.count = product.stackCount;
+							job.SetTarget(StorageCellInd, c);
+						}
+						// If there is no spot to store the product, end this job
+						else
+						{
+							EndJobWith(JobCondition.Incompletable);
+						}
+					}
                 },
                 defaultCompleteMode = ToilCompleteMode.Instant
             };

@@ -39,6 +39,11 @@ namespace ProcessorFramework
 
         public static Dictionary<ProcessDef, Material> processMaterials = new Dictionary<ProcessDef, Material>();
         public static Dictionary<QualityCategory, Material> qualityMaterials = new Dictionary<QualityCategory, Material>();
+        public static Command_Action emptyNowGizmo;
+        public static Texture2D emptyNowIcon = ContentFinder<Texture2D>.Get("UI/EmptyNow");
+        public static Texture2D emptyNowDesignation = ContentFinder<Texture2D>.Get("UI/EmptyNowDesignation");
+        public static Command_Action dontEmptyGizmo;
+        public static Texture2D dontEmptyIcon = ContentFinder<Texture2D>.Get("UI/Designators/Cancel");
 
         static ProcessorFramework_Utility()
         {
@@ -74,7 +79,7 @@ namespace ProcessorFramework
         {
             //RecacheProcessGizmos();
             RecacheProcessMaterials();
-            //RecacheQualityGizmos();
+            RecacheQualityGizmos();
         }
 
         private static void CacheAllProcesses()
@@ -134,7 +139,10 @@ namespace ProcessorFramework
             {
                 Texture2D icon = GetIcon(process.thingDef, PF_Settings.singleItemIcon);
                 Material mat = MaterialPool.MatFrom(icon);
-                processMaterials.Add(process, mat);
+                if (!processMaterials.ContainsKey(process))
+                {
+                    processMaterials.Add(process, mat);
+                }
             }
             qualityMaterials.Clear();
             foreach (QualityCategory quality in Enum.GetValues(typeof(QualityCategory)))
@@ -145,7 +153,7 @@ namespace ProcessorFramework
             }
         }
 
-        /*public static void RecacheQualityGizmos()
+        public static void RecacheQualityGizmos()
         {
             qualityGizmos.Clear();
             foreach (QualityCategory quality in Enum.GetValues(typeof(QualityCategory)))
@@ -168,7 +176,47 @@ namespace ProcessorFramework
                 };
                 qualityGizmos.Add(quality, command_Quality);
             }
-        }*/
+            emptyNowGizmo = CacheEmptyNowGizmo(true);
+            dontEmptyGizmo = CacheEmptyNowGizmo(false);
+        }
+        public static Command_Action CacheEmptyNowGizmo(bool empty)
+        {
+            if (empty)
+            {
+                return new Command_Action
+                {
+                    defaultLabel = "PF_emptyNow".Translate(),
+                    defaultDesc = "PF_emptyNowDescription".Translate(),
+                    icon = emptyNowIcon,
+                    action = () => { SetEmptyNow(true); },
+                    activateSound = SoundDefOf.TabOpen
+                };
+            }
+            else 
+            {
+                return new Command_Action
+                {
+                    defaultLabel = "PF_dontEmpty".Translate(),
+                    defaultDesc = "PF_dontEmptyDescription".Translate(),
+                    icon = dontEmptyIcon,
+                    action = () => { SetEmptyNow(false); },
+                    activateSound = SoundDefOf.TabClose
+                };
+            }
+
+        }
+        internal static void SetEmptyNow(bool empty)
+        {
+            foreach (Thing thing in Find.Selector.SelectedObjects.OfType<Thing>())
+            {
+                CompProcessor comp = thing.TryGetComp<CompProcessor>();
+                if (comp != null && comp.activeProcesses.Any(x => x.processDef.usesQuality))
+                {
+                    comp.emptyNow = empty;
+                }
+            }
+        }
+
 
         private static int gooseAngle = Rand.Range(0, 360);
         public static Command_Action DebugGizmo()
@@ -289,7 +337,7 @@ namespace ProcessorFramework
                     if (comp.Empty)
                     {
                         Thing ingredient = ThingMaker.MakeThing(comp.Props.processes.First().ingredientFilter.AnyAllowedDef);
-                        ingredient.stackCount = comp.SpaceLeft;
+                        ingredient.stackCount = Mathf.FloorToInt(comp.SpaceLeft / comp.Props.processes.First().capacityFactor);
                         comp.AddIngredient(ingredient);
                     }
                 }
@@ -303,46 +351,21 @@ namespace ProcessorFramework
             return thingFilter.Summary;
         }
 
-        public static string VowelTrim(string str, int limit)
+        public static string ToStringPercentColored(this float val, List<Pair<float, Color>> colors = null)
         {
-            int vowelsToRemove = str.Length - limit;
-            for (int i = str.Length - 1; i > 0; i--)
-            {
-                if (vowelsToRemove <= 0)
-                    break;
-
-                if (IsVowel(str[i]))
-                {
-                    if (str[i - 1] == ' ')
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        str = str.Remove(i, 1);
-                        vowelsToRemove--;
-                    }
-                }
-            }
-
-            if (str.Length > limit)
-            {
-                str = str.Remove(limit - 2) + "..";
-            }
-
-            return str;
-        }
-
-        public static bool IsVowel(char c)
-        {
-            var vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u' };
-            return vowels.Contains(c);
+            colors ??= ITab_ProcessorContents.GreenToYellowToRed;
+            return val.ToStringPercent().Colorize(GenUI.LerpColor(colors, val));
         }
 
         // Try to get a texture of a thingDef; If not found, use LaunchReport icon
         public static Texture2D GetIcon(ThingDef thingDef, bool singleStack = true)
         {
-            Texture2D icon = ContentFinder<Texture2D>.Get(thingDef.graphicData.texPath, false);
+            Texture2D icon = null;
+            if (thingDef?.graphicData?.texPath == null)
+            {
+                icon = ContentFinder<Texture2D>.GetAllInFolder(thingDef.race.AnyPawnKind.lifeStages.First().bodyGraphicData.texPath).FirstOrDefault();
+            }
+            if (icon == null) icon = ContentFinder<Texture2D>.Get(thingDef.graphicData.texPath, false);
             if (icon == null)
             {
                 // Use the first texture in the folder

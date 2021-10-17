@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using RimWorld;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 
@@ -26,13 +27,14 @@ namespace ProcessorFramework
 		protected override IEnumerable<Toil> MakeNewToils()
 		{
 			CompProcessor comp = Processor.TryGetComp<CompProcessor>();
-						
-			// Verify fermenter and ingredient validity
-			this.FailOnDespawnedNullOrForbidden(FermenterInd);
+            float minFactor = comp.Props.processes.Find(x => x.ingredientFilter.Allows(Ingredient)).capacityFactor;
+
+            // Verify fermenter and ingredient validity
+            this.FailOnDespawnedNullOrForbidden(FermenterInd);
 			this.FailOnBurningImmobile(FermenterInd);
             AddEndCondition(delegate
             {
-                if (comp.SpaceLeft <= 0 || !comp.ingredientFilter.Allows(Ingredient))
+                if (comp.SpaceLeft < minFactor || !comp.ingredientFilter.Allows(Ingredient))
                 {
                     return JobCondition.Succeeded;
                 }
@@ -40,7 +42,7 @@ namespace ProcessorFramework
             });
             yield return Toils_General.DoAtomic(delegate
             {
-                job.count = comp.SpaceLeft;
+                job.count = Mathf.FloorToInt(comp.SpaceLeft / minFactor);
             });
 
             // Creating the toil before yielding allows for CheckForGetOpportunityDuplicate
