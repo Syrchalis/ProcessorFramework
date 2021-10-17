@@ -1,7 +1,8 @@
 ### ProcessorFramework
 The successor to Universal Fermenter
  
-The framework is largely based on the original universal fermenter, with some large-scale improvements.
+Processor Framework is a framework for autonomous transformation of ingredients into products inside objects. The framework is largely based on the original universal fermenter, with some large-scale improvements.
+
 Main Features:
 * Independent processes
 * Parallel processes
