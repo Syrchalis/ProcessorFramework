@@ -2,14 +2,14 @@
 <Patch>
 
   <!-- VGP Garden Drinks | dismarzero.VGP.VGPGardenDrinks -->
-  <Operation Class="PatchOperationFindMod">
+  <!--<Operation Class="PatchOperationFindMod">
     <mods>
       <li>VGP Garden Drinks</li>
     </mods>
       <match Class="PatchOperationSequence">
       <operations>
         <li Class="PatchOperationAdd">
-        <xpath>*/ThingDef[defName = "UniversalFermenter"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes</xpath>
+        <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
           <value>
             <li>
               <thingDef>rum</thingDef>
@@ -104,9 +104,9 @@
           </value>
         </li>
         <li Class="PatchOperationReplace">
-        <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/comps/li[@Class="Drinks.CompProperties_UniversalFermenter"]</xpath>
+        <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/comps/li[@Class="Drinks.CompProperties_BarrelProcessor"]</xpath>
           <value>
-            <li Class="UniversalFermenter.CompProperties_UniversalFermenter">
+            <li Class="ProcessorFramework.CompProperties_Processor">
               <barOffset>(0.0, 0.5)</barOffset>
               <productIconSize>(2.0, 2.0)</productIconSize>
               <processes>
@@ -229,11 +229,11 @@
         <li Class="PatchOperationAdd">
         <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]</xpath>
           <value>
-            <thingClass>UniversalFermenter.Building_ColorCoded</thingClass>
+            <thingClass>BarrelProcessor.Building_ColorCoded</thingClass>
           </value>
         </li>
         <li Class="PatchOperationRemove">
-          <xpath>*/WorkGiverDef[defName = "VG_WorkGiver_TakeProductOutOfUniversalFermenter" or defName = "VG_WorkGiver_FillUniversalFermenter"]</xpath>
+          <xpath>*/WorkGiverDef[defName = "VG_WorkGiver_TakeProductOutOfBarrelProcessor" or defName = "VG_WorkGiver_FillBarrelProcessor"]</xpath>
         </li>
         <li Class="PatchOperationFindMod">
           <mods>
@@ -242,7 +242,7 @@
           <match Class="PatchOperationSequence">
             <operations>
               <li Class="PatchOperationAdd">
-              <xpath>*/ThingDef[defName = "UniversalFermenter"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes</xpath>
+              <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
                 <value>
                   <li>
                     <thingDef>cider</thingDef>
@@ -297,7 +297,7 @@
                 </value>
               </li>
               <li Class="PatchOperationAdd">
-              <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes</xpath>
+              <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
                 <value>
                   <li>
                     <thingDef>cider</thingDef>
@@ -358,7 +358,7 @@
                 <nomatch Class="PatchOperationSequence">
                   <operations>
                     <li Class="PatchOperationAdd">
-                    <xpath>*/ThingDef[defName = "UniversalFermenter"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes</xpath>
+                    <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
                       <value>
                         <li>
                           <thingDef>Wine</thingDef>
@@ -373,7 +373,7 @@
                       </value>
                     </li>
                     <li Class="PatchOperationAdd">
-                    <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes</xpath>
+                    <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
                       <value>
                         <li>
                           <thingDef>Wine</thingDef>
@@ -395,10 +395,10 @@
         </li>
       </operations>
     </match>
-  </Operation>
+  </Operation>-->
 
   <!-- Ceramics | n7huntsman.ceramics -->
-  <Operation Class="PatchOperationFindMod">
+  <!--<Operation Class="PatchOperationFindMod">
     <mods>
       <li>Ceramics</li>
     </mods>
@@ -410,7 +410,7 @@
         <li Class="PatchOperationAdd">
           <xpath>*/ThingDef[defName = "Building_DryingRack"]/comps</xpath>
           <value>
-            <li Class="UniversalFermenter.CompProperties_UniversalFermenter">
+            <li Class="ProcessorFramework.CompProperties_Processor">
               <processes>
                 <li>
                   <thingDef>N7_DriedMudbrick</thingDef>
@@ -434,7 +434,7 @@
         <li Class="PatchOperationAdd">
           <xpath>*/ThingDef[defName = "Building_PrimitiveKiln"]/comps</xpath>
           <value>
-            <li Class="UniversalFermenter.CompProperties_UniversalFermenter">
+            <li Class="ProcessorFramework.CompProperties_Processor">
               <processes>
                 <li>
                   <thingDef>N7_FiredBrick</thingDef>
@@ -454,7 +454,7 @@
         <li Class="PatchOperationAdd">
           <xpath>*/ThingDef[defName = "Building_BasicKiln"]/comps</xpath>
           <value>
-            <li Class="UniversalFermenter.CompProperties_UniversalFermenter">
+            <li Class="ProcessorFramework.CompProperties_Processor">
               <processes>
                 <li>
                   <thingDef>N7_FiredBrick</thingDef>
@@ -474,7 +474,7 @@
         <li Class="PatchOperationAdd">
           <xpath>*/ThingDef[defName = "Building_ElectricKiln"]/comps</xpath>
           <value>
-            <li Class="UniversalFermenter.CompProperties_UniversalFermenter">
+            <li Class="ProcessorFramework.CompProperties_Processor">
               <processes>
                 <li>
                   <thingDef>N7_FiredBrick</thingDef>
@@ -499,7 +499,7 @@
         </li>
       </operations>
       </match>
-  </Operation>
+  </Operation>-->
 
   <!-- RimBees | sarg.rimbees-->
   <Operation Class="PatchOperationFindMod">
@@ -509,9 +509,16 @@
       <match Class="PatchOperationSequence">
       <operations>
         <li Class="PatchOperationAdd">
-        <xpath>*/ThingDef[defName = "UniversalFermenter"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes</xpath>
+        <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
           <value>
-            <li>
+            <li>RB_Mead</li>
+          </value>
+        </li>
+        <li Class="PatchOperationAdd">
+        <xpath>/Defs</xpath>
+          <value>
+            <ProcessorFramework.ProcessDef>
+              <defName>RB_Mead</defName>
               <thingDef>RB_Mead</thingDef>
               <ingredientFilter>
                 <thingDefs>
@@ -519,21 +526,15 @@
                 </thingDefs>
               </ingredientFilter>
               <processDays>6</processDays>
-            </li>
+            </ProcessorFramework.ProcessDef>
           </value>
         </li>
         <li Class="PatchOperationRemove">
           <xpath>*/ThingDef[defName = "RB_MeadFermentingBarrel"]/designationCategory</xpath>
         </li>
-        <li Class="PatchOperationRemove">
-          <xpath>*/WorkGiverDef[defName = "RB_TakeBeerOutOfFermentingBarrel" or defName = "RB_FillMeadFermentingBarrel"]</xpath>
-        </li>
       </operations>
       </match>
   </Operation>
-
-  <!-- Simple Chains: Lumber | Owlchemist.SimpleChains.Lumber-->
-  <!-- Patches are in the mod -->
 
   <!-- Vanilla Factions Expanded - Medieval | OskarPotocki.VanillaFactionsExpanded.MedievalModule -->
   <Operation Class="PatchOperationFindMod">
@@ -546,18 +547,64 @@
           <xpath>*/ThingDef[defName = "VFEM_WineBarrel"]/designationCategory</xpath>
         </li>
         <li Class="PatchOperationAdd">
-        <xpath>*/ThingDef[defName = "UniversalFermenter"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes</xpath>
+        <xpath>/Defs</xpath>
           <value>
-            <li>
+            <ProcessorFramework.ProcessDef>
+              <defName>VFE_Wine</defName>
               <thingDef>VFEM_Wine</thingDef>
               <ingredientFilter>
                 <thingDefs>
                   <li>VFEM_Must</li>
                 </thingDefs>
               </ingredientFilter>
-              <maxCapacity>10</maxCapacity>
+              <capacityFactor>2.5</capacityFactor>
               <usesQuality>true</usesQuality>
               <qualityDays>(1, 3, 8, 14, 20, 50, 120)</qualityDays>
+            </ProcessorFramework.ProcessDef>
+          </value>
+        </li>
+        <li Class="PatchOperationAdd">
+          <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
+          <value>
+            <li>VFE_Wine</li>
+          </value>
+        </li>
+        <li Class="PatchOperationRemove">
+          <xpath>*/ThingDef[defName = "VFEM_MeatSmoker"]/thingClass</xpath>
+        </li>
+        <li Class="PatchOperationAdd">
+        <xpath>*/ThingDef[defName = "VFEM_MeatSmoker"]</xpath>
+          <value>
+            <drawerType>MapMeshAndRealTime</drawerType>
+          </value>
+        </li>
+        <li Class="PatchOperationAdd">
+        <xpath>/Defs</xpath>
+          <value>
+            <ProcessorFramework.ProcessDef>
+              <defName>VFEM_SmokedMeat</defName>
+              <thingDef>VFEM_SmokedMeat</thingDef>
+              <ingredientFilter>
+                <categories>
+                  <li>MeatRaw</li>
+                </categories>
+                <disallowedThingDefs>
+                  <li>VFEM_SmokedMeat</li>
+                </disallowedThingDefs>
+              </ingredientFilter>
+              <processDays>3</processDays>
+            </ProcessorFramework.ProcessDef>
+          </value>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>*/ThingDef[defName = "VFEM_MeatSmoker"]/comps/li[@Class="ItemProcessor.CompProperties_ItemProcessor"]</xpath>
+          <value>
+            <li Class="ProcessorFramework.CompProperties_Processor">
+              <capacity>75</capacity>
+              <independentProcesses>true</independentProcesses>
+              <processes>
+                <li>VFEM_SmokedMeat</li>
+              </processes>
             </li>
           </value>
         </li>
@@ -566,7 +613,7 @@
   </Operation>
 
 <!-- Vanilla Factions Expanded - Settlers | OskarPotocki.VanillaFactionsExpanded.SettlersModule -->
-  <Operation Class="PatchOperationFindMod">
+  <!--<Operation Class="PatchOperationFindMod">
     <mods>
       <li>Vanilla Factions Expanded - Settlers</li>
     </mods>
@@ -576,7 +623,7 @@
           <xpath>*/ThingDef[defName = "Building_ChemshineBarrel"]/designationCategory</xpath>
         </li>
         <li Class="PatchOperationAdd">
-        <xpath>*/ThingDef[defName = "UniversalFermenter"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes</xpath>
+        <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
           <value>
             <li>
               <thingDef>Chemshine</thingDef>
@@ -593,10 +640,10 @@
         </li>
       </operations>
       </match>
-  </Operation>
+  </Operation>-->
 
   <!-- Vanilla Factions Expanded - Vikings | OskarPotocki.VFE.Vikings -->
-  <Operation Class="PatchOperationFindMod">
+  <!--<Operation Class="PatchOperationFindMod">
     <mods>
       <li>Vanilla Factions Expanded - Vikings</li>
     </mods>
@@ -606,7 +653,7 @@
           <xpath>/Defs/ThingDef[defName = "VFEV_MeadFermentingBarrel"]/designationCategory</xpath>
         </li>
         <li Class="PatchOperationAdd">
-        <xpath>/Defs/ThingDef[defName = "UniversalFermenter"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes</xpath>
+        <xpath>/Defs/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
           <value>
             <li>
               <thingDef>VFEV_Mead</thingDef>
@@ -624,10 +671,10 @@
         </li>
       </operations>
       </match>
-  </Operation>
+  </Operation>-->
 
 <!-- [1.0, 1.1] RimCuisine 2 Core | Crustypeanut.RC2.Core -->
-  <Operation Class="PatchOperationFindMod">
+  <!--<Operation Class="PatchOperationFindMod">
     <mods>
       <li>[1.0, 1.1] RimCuisine 2 Core</li>
     </mods>
@@ -639,7 +686,7 @@
         <li Class="PatchOperationAdd">
           <xpath>Defs/ThingDef[defName="RC2_MeatDryingRack"]/comps</xpath>
           <value>
-            <li Class="UniversalFermenter.CompProperties_UniversalFermenter">
+            <li Class="ProcessorFramework.CompProperties_Processor">
               <barOffset>(0.0, 0.17)</barOffset>
               <processes>
                 <li>
@@ -660,7 +707,7 @@
         <li Class="PatchOperationAdd">
           <xpath>Defs/ThingDef[defName="RC2_FruitDryingRack"]/comps</xpath>
           <value>
-            <li Class="UniversalFermenter.CompProperties_UniversalFermenter">
+            <li Class="ProcessorFramework.CompProperties_Processor">
               <processes>
                 <li>
                   <thingDef>RC2_DriedFruit</thingDef>
@@ -679,7 +726,7 @@
         <li Class="PatchOperationAdd">
           <xpath>Defs/ThingDef[defName="RC2_PicklingBarrel"]/comps</xpath>
           <value>
-            <li Class="UniversalFermenter.CompProperties_UniversalFermenter">
+            <li Class="ProcessorFramework.CompProperties_Processor">
               <barOffset>(0.0, -0.2)</barOffset>
               <processes>
                 <li>
@@ -733,7 +780,7 @@
         <li Class="PatchOperationRemove">
           <xpath>Defs/ThingDef[thingClass="ExpandableFermenting.Building_Processing"]/thingClass</xpath>
         </li>
-        <!-- Removes all barrels of RimCuisine 2 Drinks -->
+        
         <li Class="PatchOperationRemove">
           <xpath>Defs/ThingDef[thingClass="ExpandableFermenting.Building_Fermenting"]</xpath>
         </li>
@@ -757,7 +804,7 @@
               <li Class="PatchOperationAdd">
                 <xpath>Defs/ThingDef[defName="RC2_CheesePress"]/comps</xpath>
                 <value>
-                  <li Class="UniversalFermenter.CompProperties_UniversalFermenter">
+                  <li Class="ProcessorFramework.CompProperties_Processor">
                     <processes>
                       <li>
                         <thingDef>RC2_Cheese</thingDef>
@@ -803,7 +850,7 @@
           <match Class="PatchOperationSequence">
             <operations>
               <li Class="PatchOperationAdd">
-                  <xpath>*/ThingDef[defName = "UniversalFermenter"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes</xpath>
+                  <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
                   <value>
                     <li>
                       <thingDef>RC2_Wine</thingDef>
@@ -980,9 +1027,9 @@
 
                 <li Class="PatchOperationConditional">
                   <success>Always</success>
-                  <xpath>*/ThingDef[defName = "UniversalFermenter"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes/li[thingDef = "Beer"]</xpath>
+                  <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes/li[thingDef = "Beer"]</xpath>
                   <match Class="PatchOperationAdd">
-                    <xpath>*/ThingDef[defName = "UniversalFermenter"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]/processes/li[thingDef = "Beer"]</xpath>
+                    <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes/li[thingDef = "Beer"]</xpath>
                     <value>
                       <colorCoded>true</colorCoded>
                       <color>(128, 80, 48)</color>
@@ -994,5 +1041,5 @@
         </li>
       </operations>
     </match>
-  </Operation>
+  </Operation>-->
 </Patch>

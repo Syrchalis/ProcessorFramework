@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -36,11 +37,15 @@ namespace ProcessorFramework
             size = new Vector2(600f, 450f);
         }
 
+        //public override bool IsVisible => Find.Selector.SingleSelectedThing != null;
+
         protected override void FillTab()
         {
-            CompProcessor fermenter = SelThing.TryGetComp<CompProcessor>();
-            if (fermenter == null)
+            IEnumerable<CompProcessor> processors = Find.Selector.SelectedObjects.Select(o => (o as ThingWithComps)?.TryGetComp<CompProcessor>());
+            if (processors.EnumerableNullOrEmpty())
+            {
                 return;
+            }
 
             Rect outRect = new Rect(default, size).ContractedBy(10f);
             outRect.yMin += 20f;
@@ -48,12 +53,12 @@ namespace ProcessorFramework
             Text.Font = GameFont.Small;
             Widgets.BeginScrollView(outRect, ref scrollPosition, rect);
             float num = 0f;
-            DoItemsLists(rect, ref num, fermenter);
+            DoItemsLists(rect, ref num, processors);
             lastDrawnHeight = num;
             Widgets.EndScrollView();
         }
 
-        protected void DoItemsLists(Rect inRect, ref float curY, CompProcessor processor)
+        protected void DoItemsLists(Rect inRect, ref float curY, IEnumerable<CompProcessor> processors)
         {
             GUI.BeginGroup(inRect);
 
@@ -65,13 +70,16 @@ namespace ProcessorFramework
             Widgets.ListSeparator(ref curY, inRect.width, "PF_FermentingItems".Translate());
             bool flag = false;
 
-            for (int i = 0; i < processor.innerContainer.Count; i++)
+            foreach (CompProcessor processor in processors)
             {
-                Thing t = processor.innerContainer[i];
-                if (t != null)
+                for (int i = 0; i < processor.innerContainer.Count; i++)
                 {
-                    flag = true;
-                    DoThingRow(t.def, t, inRect.width, ref curY, processor);
+                    Thing t = processor.innerContainer[i];
+                    if (t != null)
+                    {
+                        flag = true;
+                        DoThingRow(t.def, t, inRect.width, ref curY, processor);
+                    }
                 }
             }
 
@@ -193,9 +201,9 @@ namespace ProcessorFramework
             y += H;
         }
 
-        private IEnumerable<Widgets.DropdownMenuElement<QualityCategory>> GetProgressQualityDropdowns(ActiveProcess progress)
+        private IEnumerable<Widgets.DropdownMenuElement<QualityCategory>> GetProgressQualityDropdowns(ActiveProcess activeProcess)
         {
-            if (progress == null)
+            if (activeProcess == null)
                 yield break;
 
             foreach (QualityCategory quality in QualityUtility.AllQualityCategories)
@@ -205,7 +213,7 @@ namespace ProcessorFramework
                 {
                     option = new FloatMenuOption(
                         quality.GetLabel().CapitalizeFirst(),
-                        () => progress.TargetQuality = quality,
+                        () => activeProcess.TargetQuality = quality,
                         (Texture2D)iconMaterial.mainTexture,
                         iconMaterial.color),
                     payload = quality

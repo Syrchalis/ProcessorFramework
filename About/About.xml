@@ -5,41 +5,26 @@
 	<supportedVersions>
     <li>1.3</li>
 	</supportedVersions>
-	<packageId>syrchalis.processor</packageId>
-	<description>A framework for time-based processing inside objects
+	<packageId>syrchalis.processor.framework</packageId>
+	<description>A framework for autonomous transformation of ingredients into products inside objects
 
-So what's different about this version?
+Processor framework is mainly aimed at mod authors who want to add any sort of processor to their mod or make an existing object a processor. A processor takes a set of ingredients and turns it autonomously into a product over a period of time. The framework supports a huge variety of settings to individualize the processes.
 
-Performance
-Workgivers: Scanned everything on the whole map -> Now checks a cached list of everything with the UF comp
-Gizmos: Uncached constantly updating gizmos creating huge load per object selected -> fully pre-cached gizmos cost barely any performance, no matter how many objects you select
+[b]Players benefits:[/b]
+[list]
+[*] New HD barrel texture
+[*] Barrel can be made of any wood type
+[*] Brewery can be made of any wood type
+[*] ITab to quickly select products and ingredients
+[*] Products are shown on the processing building
+[*] Performance-improvements over vanilla
+[*] Button in settings to replace vanilla barrels
+[/list]
 
-Player features
-Shiny new barrel texture
-Fermenting Barrel can be built out of any woody material
-Brewery can be built out of any woody material
-Select which item to process from a float menu
-Icon on buildings shows the selected process (only if building has more than 1 process)
-New mod settings
-Change icon size or disable it
-Change icon to resemble a single item or a full stack
-Sort the float menu list alphabetically
-Color coded processes
-
-Mod developer features
-Refer to https://github.com/Syrchalis/UniversalFermenter/wiki
-
-Load Universal Fermenter before any mod that uses it. This ensures that it's assembly will be loaded first if other mods use an old version of universal fermenter.</description>
+[b]Mod developer features[/b]
+Refer to https://github.com/Syrchalis/ProcessorFramework/wiki</description>
 	<loadBefore>
-		<li>Crustypeanut.RC2.Core</li>
-		<li>Crustypeanut.RC2.BaBE</li>
-		<li>Crustypeanut.RC2.MaME</li>
-		<li>OskarPotocki.VanillaFactionsExpanded.MedievalModule</li>
-		<li>OskarPotocki.VanillaFactionsExpanded.SettlersModule</li>
-		<li>dismarzero.VGP.VGPVegetableGarden</li>
-		<li>dismarzero.VGP.VGPGardenDrinks</li>
-		<li>n7huntsman.ceramics</li>
-		<li>sarg.rimbees</li>
+		<li>Owlchemist.SimpleChains.Leather</li>
 		<li>Owlchemist.SimpleChains.Lumber</li>
 	</loadBefore>
   <loadAfter>

@@ -54,24 +54,29 @@ namespace ProcessorFramework
 
         public static void CheckForErrors()
         {
-            bool sendWarning = false;
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("<-- Processor Framework Errors -->");
+            List<string> warnings = new List<string>();
             foreach (ThingDef thingDef in DefDatabase<ThingDef>.AllDefs.Where(x => x.HasComp(typeof(CompProcessor)))) //we grab every thingDef that has the PF comp
             {
                 if (thingDef.comps.Find(c => c.compClass == typeof(CompProcessor)) is CompProperties_Processor compPF)
                 {
                     if (compPF.processes.Any(p => p.thingDef == null || p.ingredientFilter.AllowedThingDefs.EnumerableNullOrEmpty()))
                     {
-                        stringBuilder.AppendLine("ThingDef '" + thingDef.defName + "' has processes with no product or no filter. These fields are required.");
+                        warnings.Add(thingDef.modContentPack.Name + ": ThingDef '" + thingDef.defName + "' has processes with no product or no ingredient filter. These fields are required.");
                         compPF.processes.RemoveAll(p => p.thingDef == null || p.ingredientFilter.AllowedThingDefs.EnumerableNullOrEmpty());
-                        sendWarning = true;
                     }
                 }
+                if (thingDef.drawerType != DrawerType.MapMeshAndRealTime)
+                {
+                    warnings.Add(thingDef.modContentPack.Name + ": ThingDef '" + thingDef.defName + "' has DrawerType '" + thingDef.drawerType.ToString() + "', but MapMeshAndRealTime is required to display product icons and a progress bar.");
+                }
             }
-            if (sendWarning)
+            if (warnings.Count != 0)
             {
-                Log.Warning(stringBuilder.ToString().TrimEndNewlines());
+                Log.Warning("<-- Processor Framework Warnings -->");
+                foreach (string warning in warnings)
+                {
+                    Log.Warning(warning);
+                }
             }
         }
 

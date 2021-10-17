@@ -92,7 +92,7 @@ namespace ProcessorFramework
                 CompProcessor comp = thing.TryGetComp<CompProcessor>();
                 if (comp != null && comp.activeProcesses.Any(x => x.processDef.usesQuality)) 
                 {
-                    foreach (ActiveProcess activeProcess in comp.activeProcesses.Where(x => x.TargetQuality == qualityToTarget))
+                    foreach (ActiveProcess activeProcess in comp.activeProcesses/*.Where(x => x.TargetQuality == qualityToTarget)*/)
                     {
                         activeProcess.TargetQuality = quality;
                         comp.cachedTargetQualities[activeProcess.processDef] = quality;

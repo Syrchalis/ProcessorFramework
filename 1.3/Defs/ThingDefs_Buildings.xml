@@ -41,13 +41,14 @@
     </stuffCategories>
     <comps>
       <li Class="ProcessorFramework.CompProperties_Processor">
+        <capacity>25</capacity>
+        <independentProcesses>true</independentProcesses>
+        <parallelProcesses>true</parallelProcesses>
+        <dropIngredients>false</dropIngredients>
         <showProductIcon>true</showProductIcon>
         <barOffset>(0.0, 0.25)</barOffset>
         <barScale>(1.0, 1.0)</barScale>
-        <independentProcesses>true</independentProcesses>
-        <parallelProcesses>true</parallelProcesses>
         <colorCoded>false</colorCoded>
-        <capacity>25</capacity>
         <processes>
           <li>Beer</li>
           <li>Test</li>
@@ -71,7 +72,7 @@
         <li>Wort</li>
       </thingDefs>
     </ingredientFilter>
-    <processDays>6</processDays> <!-- in days, 60000 ticks is a day -->
+    <processDays>6</processDays> <!-- in days, a day is 60,000 ticks -->
     <capacityFactor>1</capacityFactor>
     <efficiency>1.0</efficiency>
     <usesTemperature>true</usesTemperature>

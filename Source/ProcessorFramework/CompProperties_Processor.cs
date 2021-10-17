@@ -14,7 +14,8 @@ namespace ProcessorFramework
 
 		public bool independentProcesses = false;
 		public bool parallelProcesses = false;
-		
+
+		public bool dropIngredients = false;
 		public bool colorCoded = false;
 
 		public int capacity = 25;

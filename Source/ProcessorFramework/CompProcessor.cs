@@ -138,6 +138,26 @@ namespace ProcessorFramework
             {
                 graphicChangeQueued = true;
             }
+            if (!ingredientFilter.AllowedThingDefs.Except(activeProcesses.SelectMany(x => x.processDef.ingredientFilter.AllowedThingDefs)).EnumerableNullOrEmpty())
+            {
+                ingredientFilter = new ThingFilter();
+                foreach (ThingDef thingDef in Props.processes.SelectMany(x => x.ingredientFilter.AllowedThingDefs))
+                {
+                    ingredientFilter.SetAllow(thingDef, true);
+                }
+            }
+        }
+
+        public override void PostDestroy(DestroyMode mode, Map previousMap)
+        {
+            base.PostDestroy(mode, previousMap);
+            if (mode != DestroyMode.Vanish && Props.dropIngredients)
+            {
+                foreach (Thing thing in innerContainer)
+                {
+                    GenSpawn.Spawn(thing, parent.Position, previousMap);
+                }
+            }
         }
 
         public override void PostDeSpawn(Map map)
@@ -149,7 +169,7 @@ namespace ProcessorFramework
         public override void PostExposeData()
         {
             Scribe_Deep.Look(ref innerContainer, "PF_innerContainer", this);
-            Scribe_Collections.Look(ref activeProcesses,  "PF_ingredientLabels", LookMode.Deep, this);
+            Scribe_Collections.Look(ref activeProcesses,  "PF_activeProcesses", LookMode.Deep, this);
             Scribe_Deep.Look(ref productFilter, "PF_productFilter");
             Scribe_Deep.Look(ref ingredientFilter, "PF_ingredientFilter");
         }
@@ -193,7 +213,7 @@ namespace ProcessorFramework
                 bool showCurrentQuality = !Props.parallelProcesses && activeProcesses[0].processDef.usesQuality && PF_Settings.showCurrentQualityIcon;
                 Vector3 drawPos = parent.DrawPos;
                 drawPos.x += Props.barOffset.x - (showCurrentQuality ? 0.1f : 0f);
-                drawPos.y += 0.05f;
+                drawPos.y += 0.02f;
                 drawPos.z += Props.barOffset.y;
 
                 Vector2 size = Static_Bar.Size * Props.barScale;
@@ -407,17 +427,16 @@ namespace ProcessorFramework
                     }
                 }
             }
-
-            if (Empty)
-            {
-                GraphicChange(true);
-            }
             foreach (Thing ingredient in activeProcess.ingredientThings)
             {
                 innerContainer.Remove(ingredient);
                 ingredient.Destroy();
             }
             activeProcesses.Remove(activeProcess);
+            if (Empty)
+            {
+                GraphicChange(true);
+            }
             if (!activeProcesses.Any(x => x.processDef.usesQuality))
             {
                 emptyNow = false;
@@ -448,7 +467,7 @@ namespace ProcessorFramework
             ProcessDef singleDef = Props.parallelProcesses ? null : activeProcesses[0].processDef;
             if (singleDef != null)
             {
-                if (!Props.independentProcesses && activeProcesses.Count == 1 && singleDef.usesQuality && activeProcesses[0].ActiveProcessDays >= singleDef.qualityDays.awful)
+                if (activeProcesses.Count == 1 && singleDef.usesQuality && activeProcesses[0].ActiveProcessDays >= singleDef.qualityDays.awful)
                 {
                     ActiveProcess progress = activeProcesses[0];
                     str.AppendTagged("PF_ContainsProduct".Translate(TotalIngredientCount, Props.capacity, singleDef.thingDef.Named("PRODUCT"), progress.CurrentQuality.GetLabel().ToLower().Named("QUALITY")));
@@ -456,7 +475,7 @@ namespace ProcessorFramework
                 else
                 {
                     // Usually this will only be one def label shown
-                    string ingredientLabels = singleDef.ingredientFilter.AllowedThingDefs.Select(d => d.label).Join();
+                    string ingredientLabels = activeProcesses.First().ingredientThings.Select(x => x.Label).Join();
                     str.AppendTagged("PF_ContainsIngredient".Translate(TotalIngredientCount, Props.capacity, ingredientLabels.Named("INGREDIENTS")));
                 }
             }

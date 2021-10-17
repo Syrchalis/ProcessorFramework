@@ -16,7 +16,7 @@ namespace ProcessorFramework
             get
             {
                 CompProcessor comp = this.TryGetComp<CompProcessor>();
-                if (comp != null && !comp.Props.parallelProcesses && comp.Props.colorCoded && !comp.activeProcesses.NullOrEmpty())
+                if (comp != null && !comp.Props.parallelProcesses && comp.Props.colorCoded && !comp.activeProcesses.NullOrEmpty() && comp.activeProcesses.First().processDef.color != Color.white)
                 {
                     return comp.activeProcesses.First().processDef.color;
                 }

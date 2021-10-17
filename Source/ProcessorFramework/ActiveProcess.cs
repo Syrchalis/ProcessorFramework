@@ -352,9 +352,10 @@ namespace ProcessorFramework
         public void ExposeData()
         {
             Scribe_Defs.Look<ProcessDef>(ref processDef, "PF_processDef");
+            Scribe_Collections.Look(ref ingredientThings, "ingredientThings", LookMode.Reference);
             Scribe_Values.Look(ref ruinedPercent, "PF_ruinedPercent", 0f);
             Scribe_Values.Look(ref ingredientCount, "PF_ingredientCount", 0);
-            Scribe_Values.Look(ref activeProcessTicks, "PF_progressTicks", 0);
+            Scribe_Values.Look(ref activeProcessTicks, "PF_activeProcessTicks", 0);
             Scribe_Values.Look(ref targetQuality, "targetQuality", QualityCategory.Normal);
         }
     }
