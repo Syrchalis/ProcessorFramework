@@ -354,10 +354,11 @@ namespace ProcessorFramework
             if (powerTradeComp != null)
             {
                 powerTradeComp.PowerOutput = -powerTradeComp.Props.basePowerConsumption * PowerConsumptionRate;
-            }        }
+            }        
+        }
         public void ConsumeFuel(int ticks)
         {
-            if (refuelComp == null) return;
+            if (refuelComp == null || parent.def.tickerType == TickerType.Normal) return;
             if (!Fueled || !FlickedOn) return;
             if (refuelComp.Props.consumeFuelOnlyWhenUsed && Empty) return;
             if (refuelComp.Props.consumeFuelOnlyWhenPowered && !Powered) return;
@@ -431,7 +432,7 @@ namespace ProcessorFramework
             if (!activeProcess.Ruined)
             {
                 thing = ThingMaker.MakeThing(activeProcess.processDef.thingDef, null);
-                thing.stackCount = Mathf.RoundToInt(activeProcess.ingredientCount * activeProcess.processDef.efficiency);
+                thing.stackCount = GenMath.RoundRandom(activeProcess.ingredientCount * activeProcess.processDef.efficiency);
 
                 //Ingredient transfer
                 CompIngredients compIngredients = thing.TryGetComp<CompIngredients>();
@@ -458,6 +459,21 @@ namespace ProcessorFramework
                         compQuality.SetQuality(activeProcess.CurrentQuality, ArtGenerationContext.Colony);
                     }
                 }
+                //Bonus Outputs
+                foreach (BonusOutput bonusOutput in activeProcess.processDef.bonusOutputs)
+                {
+                    if (Rand.Chance(bonusOutput.chance))
+                    {
+                        int amount = GenMath.RoundRandom((activeProcess.ingredientCount * activeProcess.processDef.capacityFactor / Props.capacity) * bonusOutput.amount);
+                        if (amount > 0)
+                        {
+                            Thing bonusThing = ThingMaker.MakeThing(bonusOutput.thingDef, null);
+                            bonusThing.stackCount = amount;
+                            GenPlace.TryPlaceThing(bonusThing, parent.Position, parent.Map, ThingPlaceMode.Near);
+                        }
+                    }
+                }
+
             }
             foreach (Thing ingredient in activeProcess.ingredientThings)
             {
@@ -465,6 +481,15 @@ namespace ProcessorFramework
                 ingredient.Destroy();
             }
             activeProcesses.Remove(activeProcess);
+            if (Rand.Chance(activeProcess.processDef.destroyChance))
+            {
+                if (PF_Settings.replaceDestroyedProcessors)
+                {
+                    GenConstruct.PlaceBlueprintForBuild_NewTemp(parent.def, parent.Position, parent.Map, parent.Rotation, Faction.OfPlayer, null, null, null);
+                }
+                parent.Destroy(DestroyMode.Vanish);
+                return thing;
+            }
             if (Empty)
             {
                 GraphicChange(true);

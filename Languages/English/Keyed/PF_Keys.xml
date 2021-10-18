@@ -17,6 +17,8 @@
 	<PF_SortAlphabeticallyTooltip>If enabled will sort list when clicking on the button to change process alphabetically, otherwise will sort by thingDef list (default: false)</PF_SortAlphabeticallyTooltip>
   <PF_defaultQuality>Default target quality</PF_defaultQuality>
   <PF_defaultQualityTooltip>Which target quality is set by default for processes that use quality</PF_defaultQualityTooltip>
+  <PF_replaceDestroyedProcessors>Replace destroyed processors</PF_replaceDestroyedProcessors>
+  <PF_replaceDestroyedProcessorsTooltip>Some processes destroy the processor, enabling this option will place a blueprint if that happens</PF_replaceDestroyedProcessorsTooltip>
 	<PF_ReplaceVanillaBarrels>Replace vanilla barrels</PF_ReplaceVanillaBarrels>
 	<PF_ReplaceVanillaBarrelsTooltip>Replaces all vanilla fermenting barrels for the PF ones, intended to be used after adding PF to an existing game, not multiplayer safe</PF_ReplaceVanillaBarrelsTooltip>
 	<PF_DefaultSettings>Reset to default</PF_DefaultSettings>
@@ -50,7 +52,7 @@
 	<PF_Ideal>Ideal</PF_Ideal>
 	<PF_Safe>Safe</PF_Safe>
 	<PF_Ruined>Ruined</PF_Ruined>
-	<PF_NA>N/A</PF_NA>
+	<PF_NA>-</PF_NA>
 	<PF_None>None</PF_None>
 	
 	<PF_WeatherTemperature>temperature</PF_WeatherTemperature>

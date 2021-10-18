@@ -30,15 +30,13 @@ namespace ProcessorFramework
                 listing_Standard.Label("PF_ProcessIconSize".Translate() +  ": " + PF_Settings.processIconSize.ToStringByStyle(ToStringStyle.PercentZero), -1, "PF_ProcessIconSizeTooltip".Translate());
                 PF_Settings.processIconSize = listing_Standard.Slider(GenMath.RoundTo(PF_Settings.processIconSize, 0.05f), 0.2f, 1f);
                 listing_Standard.CheckboxLabeled("PF_SingleItemIcon".Translate(), ref PF_Settings.singleItemIcon, "PF_SingleItemIconTooltip".Translate());
-                listing_Standard.Gap(12);
-                listing_Standard.CheckboxLabeled("PF_SortAlphabetically".Translate(), ref PF_Settings.sortAlphabetically, "PF_SortAlphabeticallyTooltip".Translate());
                 listing_Standard.GapLine(30);
                 listing_Standard.CheckboxLabeled("PF_ShowCurrentQualityIcon".Translate(), ref PF_Settings.showCurrentQualityIcon, "PF_ShowCurrentQualityIconTooltip".Translate());
                 listing_Standard.Gap(12);
-                listing_Standard.CheckboxLabeled("PF_ShowTargetQualityIcon".Translate(), ref PF_Settings.showTargetQualityIcon, "PF_ShowTargetQualityTooltip".Translate());
-                listing_Standard.Gap(12);
                 listing_Standard.Label("PF_defaultQuality".Translate() + ": " + ((QualityCategory)PF_Settings.defaultTargetQualityInt).GetLabel() , tooltip: "PF_defaultQualityTooltip".Translate());
                 PF_Settings.defaultTargetQualityInt = Mathf.RoundToInt(listing_Standard.Slider(PF_Settings.defaultTargetQualityInt, 0, 6));
+                listing_Standard.Gap(12);
+                listing_Standard.CheckboxLabeled("PF_replaceDestroyedProcessors".Translate(), ref PF_Settings.replaceDestroyedProcessors, "PF_replaceDestroyedProcessorsTooltip".Translate());
                 listing_Standard.GapLine(30);
                 Rect rectReplaceBarrels = listing_Standard.GetRect(30f);
                 TooltipHandler.TipRegion(rectReplaceBarrels, "PF_ReplaceVanillaBarrelsTooltip".Translate());
@@ -55,9 +53,7 @@ namespace ProcessorFramework
                     PF_Settings.showProcessIconGlobal = true;
                     PF_Settings.processIconSize = 0.6f;
                     PF_Settings.singleItemIcon = true;
-                    PF_Settings.sortAlphabetically = false;
                     PF_Settings.showCurrentQualityIcon = true;
-                    PF_Settings.showTargetQualityIcon = false;
                 }
                 listing_Standard.End();
                 settings.Write();
@@ -140,20 +136,18 @@ namespace ProcessorFramework
         public static bool showProcessIconGlobal = true;
         public static float processIconSize = 0.6f;
         public static bool showCurrentQualityIcon = true;
-        public static bool showTargetQualityIcon = false;
         public static bool singleItemIcon = true;
-        public static bool sortAlphabetically = false;
         public static int defaultTargetQualityInt = 0;
+        public static bool replaceDestroyedProcessors = true;
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Values.Look<bool>(ref showProcessIconGlobal, "PF_showProcessIconGlobal", true, true);
             Scribe_Values.Look<float>(ref processIconSize, "PF_processIconSize", 0.6f, true);
             Scribe_Values.Look<bool>(ref showCurrentQualityIcon, "PF_showCurrentQualityIcon", true, true);
-            Scribe_Values.Look<bool>(ref showTargetQualityIcon, "PF_showTargetQualityIcon", false, true);
             Scribe_Values.Look<bool>(ref singleItemIcon, "PF_singleItemIcon", true, true);
-            Scribe_Values.Look<bool>(ref sortAlphabetically, "PF_sortAlphabetically", false, true);
             Scribe_Values.Look<int>(ref defaultTargetQualityInt, "PF_defaultTargetQualityInt", 0, false);
+            Scribe_Values.Look<bool>(ref replaceDestroyedProcessors, "PF_replaceDestroyedProcessors", true, true);
         }
     }
 }

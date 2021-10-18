@@ -84,14 +84,16 @@ namespace ProcessorFramework
             ThingFilter filter;
             if (comp.Props.parallelProcesses || comp.Empty)
             {
-                filter = processor.TryGetComp<CompProcessor>().ingredientFilter;
+                filter = comp.ingredientFilter;
             }
             else
             {
                 filter = comp.activeProcesses.First().processDef.ingredientFilter;
             }
-            Predicate<Thing> validator = x => !x.IsForbidden(pawn) && pawn.CanReserve(x) && filter.Allows(x);
-            return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, filter.BestThingRequest, PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, validator);
+            //Needs to check that there is enough ingredient for at least one product && needs to check that space left is enough to accomodate the product before sending to JobDriver
+            Predicate<Thing> validator = x => !x.IsForbidden(pawn) && pawn.CanReserve(x) && filter.Allows(x) && x.stackCount >= 1f / comp.EnabledProcesses.First(y => y.ingredientFilter.Allows(x)).efficiency
+            && comp.SpaceLeft >= comp.EnabledProcesses.First(y => y.ingredientFilter.Allows(x)).capacityFactor;
+            return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, filter.BestThingRequest, PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, validator); ;
         }
     }
 }

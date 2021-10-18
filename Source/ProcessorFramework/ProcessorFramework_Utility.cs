@@ -69,6 +69,10 @@ namespace ProcessorFramework
                 {
                     warnings.Add(thingDef.modContentPack.Name + ": ThingDef '" + thingDef.defName + "' has DrawerType '" + thingDef.drawerType.ToString() + "', but MapMeshAndRealTime is required to display product icons and a progress bar.");
                 }
+                if (thingDef.tickerType == TickerType.Never)
+                {
+                    warnings.Add(thingDef.modContentPack.Name + ": ThingDef '" + thingDef.defName + "' has TickerType '" + thingDef.tickerType.ToString() + "', but processors need to tick to work.");
+                }
             }
             if (warnings.Count != 0)
             {

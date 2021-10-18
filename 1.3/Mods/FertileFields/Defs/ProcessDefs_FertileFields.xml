@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>RFF_Fertilizer</defName>
+    <thingDef>Fertilizer</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>RawCompost</li>
+      </thingDefs>
+    </ingredientFilter>
+    <processDays>3.0</processDays>
+    <unpoweredFactor>0.5</unpoweredFactor>
+    <destroyChance>1.0</destroyChance>
+    <bonusOutputs>
+      <WoodLog>(0.667, 1)</WoodLog>
+      <WoodLog>(0.333, 1)</WoodLog>
+    </bonusOutputs>
+  </ProcessorFramework.ProcessDef>
+
+</Defs>

@@ -15,12 +15,23 @@
 	</Operation>
 
 	<!-- Allow Brewery to be made of stuff -->
-	<Operation Class="PatchOperationReplace">
-	  <xpath>Defs/ThingDef[defName="Brewery"]/graphicData/texPath</xpath>
-		<value>
-			<texPath>Things/Building/Production/TableBreweryStuffed</texPath>
-		</value>
-	</Operation>
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Vanilla Textures Expanded</li>
+    </mods>
+      <match Class="PatchOperationReplace">
+        <xpath>Defs/ThingDef[defName="Brewery"]/graphicData/texPath</xpath>
+        <value>
+          <texPath>Things/Building/Production/TableBreweryVTEXE</texPath>
+        </value>
+      </match>
+      <nomatch Class="PatchOperationReplace">
+        <xpath>Defs/ThingDef[defName="Brewery"]/graphicData/texPath</xpath>
+        <value>
+          <texPath>Things/Building/Production/TableBreweryStuffed</texPath>
+        </value>
+      </nomatch>
+  </Operation>
 
 	<Operation Class="PatchOperationConditional">
     <xpath>Defs/ThingDef[defName="Brewery"]/costList/WoodLog</xpath>

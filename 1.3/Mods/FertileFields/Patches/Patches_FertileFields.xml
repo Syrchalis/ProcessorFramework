@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- Fertile Fields | jamaicancastle.RF.fertilefields-->
+  <Operation Class="PatchOperationRemove">
+    <xpath>*/ThingDef[defName = "CompostBin" or defName = "CompostBarrel"]/thingClass</xpath>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+  <xpath>*/ThingDef[defName = "CompostBin" or defName = "CompostBarrel"]</xpath>
+    <value>
+      <drawerType>MapMeshAndRealTime</drawerType>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationReplace">
+  <xpath>*/ThingDef[defName = "CompostBin"]/costList</xpath>
+    <value>
+      <costList>
+        <WoodLog>2</WoodLog>
+      </costList>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationReplace">
+  <xpath>*/ThingDef[defName = "CompostBin"]/comps/li[@Class="RFF_Code.CompProperties_CompostBin"]</xpath>
+    <value>
+      <li Class="ProcessorFramework.CompProperties_Processor">
+        <capacity>3</capacity>
+        <dropIngredients>true</dropIngredients>
+        <showProductIcon>true</showProductIcon>
+        <processes>
+          <li>RFF_Fertilizer</li>
+        </processes>
+      </li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+  <xpath>*/ThingDef[defName = "CompostBarrel"]/comps</xpath>
+    <value>
+      <li Class="ProcessorFramework.CompProperties_Processor">
+        <capacity>30</capacity>
+        <dropIngredients>true</dropIngredients>
+        <showProductIcon>true</showProductIcon>
+        <processes>
+          <li>RFF_Fertilizer</li>
+        </processes>
+      </li>
+    </value>
+  </Operation>
+
+
+	<Operation Class="PatchOperationReplace">
+	  <xpath>*/WorkGiverDef[defName = "FillCompostBarrel" or defName = "EmptyCompostBarrel"]/giverClass</xpath>
+		<value>
+			<giverClass>WorkGiver_DoBill</giverClass>
+		</value>
+	</Operation>
+
+</Patch>
