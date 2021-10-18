@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- Vanilla Factions Expanded - Settlers | OskarPotocki.VanillaFactionsExpanded.SettlersModule -->
+  <Operation Class="PatchOperationRemove">
+    <xpath>*/ThingDef[defName = "Building_ChemshineBarrel"]/designationCategory</xpath>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+  <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
+    <value>
+      <li>VFES_Chemsine</li>
+    </value>
+  </Operation>
+
+</Patch>

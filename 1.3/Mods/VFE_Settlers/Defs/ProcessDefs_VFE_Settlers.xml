@@ -1,0 +1,18 @@
+<Defs>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VFES_Chemsine</defName>
+    <thingDef>Chemshine</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>Chemfuel</li>
+      </thingDefs>
+    </ingredientFilter>
+    <processDays>5</processDays>
+    <efficiency>0.5</efficiency>
+    <capacityFactor>0.5</capacityFactor>
+    <temperatureSafe>-1.0~40.0</temperatureSafe>
+    <temperatureIdeal>7.0~40.0</temperatureIdeal>
+  </ProcessorFramework.ProcessDef>      
+
+</Defs>

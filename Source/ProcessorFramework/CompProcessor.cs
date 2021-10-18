@@ -72,7 +72,7 @@ namespace ProcessorFramework
                 {
                     rate += activeProcess.processDef.powerUseFactor * activeProcess.ingredientCount * activeProcess.processDef.capacityFactor;
                 }
-                return rate / TotalIngredientCount;
+                return rate == 0 ? 1 : rate / TotalIngredientCount;
             }
         }
         public float FuelConsumptionRate
@@ -84,7 +84,7 @@ namespace ProcessorFramework
                 {
                     rate += activeProcess.processDef.fuelUseFactor * activeProcess.ingredientCount * activeProcess.processDef.capacityFactor;
                 }
-                return rate / TotalIngredientCount;
+                return rate == 0 ? 1 : rate / TotalIngredientCount;
             }
         }
         public float RoofCoverage  // How much of the building is under a roof
@@ -351,8 +351,10 @@ namespace ProcessorFramework
         }
         public void AdjustPowerConsumption()
         {
-            powerTradeComp.PowerOutput = -powerTradeComp.Props.basePowerConsumption * PowerConsumptionRate;
-        }
+            if (powerTradeComp != null)
+            {
+                powerTradeComp.PowerOutput = -powerTradeComp.Props.basePowerConsumption * PowerConsumptionRate;
+            }        }
         public void ConsumeFuel(int ticks)
         {
             if (refuelComp == null) return;

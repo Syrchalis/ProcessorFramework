@@ -501,38 +501,6 @@
       </match>
   </Operation>-->
 
-  
-
-<!-- Vanilla Factions Expanded - Settlers | OskarPotocki.VanillaFactionsExpanded.SettlersModule -->
-  <!--<Operation Class="PatchOperationFindMod">
-    <mods>
-      <li>Vanilla Factions Expanded - Settlers</li>
-    </mods>
-      <match Class="PatchOperationSequence">
-      <operations>
-        <li Class="PatchOperationRemove">
-          <xpath>*/ThingDef[defName = "Building_ChemshineBarrel"]/designationCategory</xpath>
-        </li>
-        <li Class="PatchOperationAdd">
-        <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
-          <value>
-            <li>
-              <thingDef>Chemshine</thingDef>
-              <ingredientFilter>
-                <thingDefs>
-                  <li>Chemfuel</li>
-                </thingDefs>
-              </ingredientFilter>
-              <processDays>3</processDays>
-              <maxCapacity>50</maxCapacity>
-              <efficiency>0.5</efficiency>
-            </li>
-          </value>
-        </li>
-      </operations>
-      </match>
-  </Operation>-->
-
   <!-- Vanilla Factions Expanded - Vikings | OskarPotocki.VFE.Vikings -->
   <!--<Operation Class="PatchOperationFindMod">
     <mods>
