@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- Vanilla Factions Expanded - Medieval | OskarPotocki.VanillaFactionsExpanded.MedievalModule -->
+  <Operation Class="PatchOperationRemove">
+    <xpath>*/ThingDef[defName = "VFEM_WineBarrel"]/designationCategory</xpath>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
+    <value>
+      <li>VFE_Wine</li>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationRemove">
+    <xpath>*/ThingDef[defName = "VFEM_MeatSmoker"]/thingClass</xpath>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+  <xpath>*/ThingDef[defName = "VFEM_MeatSmoker"]</xpath>
+    <value>
+      <drawerType>MapMeshAndRealTime</drawerType>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationReplace">
+    <xpath>*/ThingDef[defName = "VFEM_MeatSmoker"]/comps/li[@Class="ItemProcessor.CompProperties_ItemProcessor"]</xpath>
+    <value>
+      <li Class="ProcessorFramework.CompProperties_Processor">
+        <capacity>75</capacity>
+        <independentProcesses>true</independentProcesses>
+        <processes>
+          <li>VFEM_SmokedMeat</li>
+        </processes>
+      </li>
+    </value>
+  </Operation>
+
+</Patch>

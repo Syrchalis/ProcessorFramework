@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>RB_Mead</defName>
+    <thingDef>RB_Mead</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>RB_Must</li>
+      </thingDefs>
+    </ingredientFilter>
+    <processDays>6</processDays>
+  </ProcessorFramework.ProcessDef>
+
+</Defs>

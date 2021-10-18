@@ -28,7 +28,9 @@ namespace ProcessorFramework
 		public FloatRange windFactor = new FloatRange(1f, 1f);
         public float unpoweredFactor = 0f;
         public float unfueledFactor = 0f;
-        public string graphicSuffix = null;
+        public float powerUseFactor = 1f;
+        public float fuelUseFactor = 1f;
+        public string filledGraphicSuffix = null;
         public bool usesQuality = false;
         public QualityDays qualityDays = new QualityDays(1, 0, 0, 0, 0, 0, 0);
         public Color color = new Color(1.0f, 1.0f, 1.0f);

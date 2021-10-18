@@ -63,6 +63,30 @@ namespace ProcessorFramework
                 return false;
             }
         }
+        public float PowerConsumptionRate
+        {
+            get
+            {
+                float rate = 0f;
+                foreach (ActiveProcess activeProcess in activeProcesses)
+                {
+                    rate += activeProcess.processDef.powerUseFactor * activeProcess.ingredientCount * activeProcess.processDef.capacityFactor;
+                }
+                return rate / TotalIngredientCount;
+            }
+        }
+        public float FuelConsumptionRate
+        {
+            get
+            {
+                float rate = 0f;
+                foreach (ActiveProcess activeProcess in activeProcesses)
+                {
+                    rate += activeProcess.processDef.fuelUseFactor * activeProcess.ingredientCount * activeProcess.processDef.capacityFactor;
+                }
+                return rate / TotalIngredientCount;
+            }
+        }
         public float RoofCoverage  // How much of the building is under a roof
         {
             get
@@ -296,12 +320,14 @@ namespace ProcessorFramework
             if (parent.IsHashIntervalTick(250))
             {
                 DoActiveProcessesRareTicks();
+                AdjustPowerConsumption();
             }
         }
         public override void CompTickRare()
         {
             DoTicks(GenTicks.TickRareInterval);
             DoActiveProcessesRareTicks();
+            AdjustPowerConsumption();
         }
         public override void CompTickLong()
         {
@@ -323,13 +349,17 @@ namespace ProcessorFramework
                 ConsumeFuel(ticks);
             }
         }
+        public void AdjustPowerConsumption()
+        {
+            powerTradeComp.PowerOutput = -powerTradeComp.Props.basePowerConsumption * PowerConsumptionRate;
+        }
         public void ConsumeFuel(int ticks)
         {
             if (refuelComp == null) return;
             if (!Fueled || !FlickedOn) return;
             if (refuelComp.Props.consumeFuelOnlyWhenUsed && Empty) return;
             if (refuelComp.Props.consumeFuelOnlyWhenPowered && !Powered) return;
-            refuelComp.ConsumeFuel(refuelComp.Props.fuelConsumptionRate / GenDate.TicksPerDay * ticks);
+            refuelComp.ConsumeFuel(ticks * FuelConsumptionRate * refuelComp.Props.fuelConsumptionRate / GenDate.TicksPerDay);
         }
 
         //Updates speed factors
@@ -450,7 +480,7 @@ namespace ProcessorFramework
             string texPath = parent.def.graphicData.texPath;
             if (!toEmpty)
             {
-                texPath += activeProcesses.MaxByWithFallback(x => x.ingredientCount)?.processDef?.graphicSuffix ?? "";
+                texPath += activeProcesses.MaxByWithFallback(x => x.ingredientCount)?.processDef?.filledGraphicSuffix ?? "";
             }
             Static_TexReloader.Reload(parent, texPath);
         }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- RimBees | sarg.rimbees-->
+  <Operation Class="PatchOperationAdd">
+  <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
+    <value>
+      <li>RB_Mead</li>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+  <xpath>/Defs</xpath>
+    <value>
+      <ProcessorFramework.ProcessDef>
+        <defName>RB_Mead</defName>
+        <thingDef>RB_Mead</thingDef>
+        <ingredientFilter>
+          <thingDefs>
+            <li>RB_Must</li>
+          </thingDefs>
+        </ingredientFilter>
+        <processDays>6</processDays>
+      </ProcessorFramework.ProcessDef>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationRemove">
+    <xpath>*/ThingDef[defName = "RB_MeadFermentingBarrel"]/designationCategory</xpath>
+  </Operation>
+
+</Patch>

@@ -142,7 +142,7 @@ namespace ProcessorFramework
 
         private float CalcSpeedFactor()
         {
-            return Mathf.Max(CurrentPowerFactor * CurrentFuelFactor * CurrentTemperatureFactor * CurrentSunFactor * CurrentRainFactor * CurrentSnowFactor * CurrentWindFactor, 0f);
+            return Mathf.Max((CurrentPowerFactor + CurrentFuelFactor + CurrentTemperatureFactor + CurrentSunFactor + CurrentRainFactor + CurrentSnowFactor + CurrentWindFactor) / 7f, 0f);
         }
 
         public float CurrentPowerFactor

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VFE_Wine</defName>
+    <thingDef>VFEM_Wine</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>VFEM_Must</li>
+      </thingDefs>
+    </ingredientFilter>
+    <capacityFactor>2.5</capacityFactor>
+    <usesQuality>true</usesQuality>
+    <qualityDays>(1, 3, 8, 14, 20, 50, 120)</qualityDays>
+  </ProcessorFramework.ProcessDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VFEM_SmokedMeat</defName>
+    <thingDef>VFEM_SmokedMeat</thingDef>
+    <ingredientFilter>
+      <categories>
+        <li>MeatRaw</li>
+      </categories>
+      <disallowedThingDefs>
+        <li>VFEM_SmokedMeat</li>
+      </disallowedThingDefs>
+    </ingredientFilter>
+    <processDays>3</processDays>
+  </ProcessorFramework.ProcessDef>
+
+</Defs>

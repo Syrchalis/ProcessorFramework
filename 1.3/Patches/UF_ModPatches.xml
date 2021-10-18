@@ -501,116 +501,7 @@
       </match>
   </Operation>-->
 
-  <!-- RimBees | sarg.rimbees-->
-  <Operation Class="PatchOperationFindMod">
-    <mods>
-      <li>RimBees</li>
-    </mods>
-      <match Class="PatchOperationSequence">
-      <operations>
-        <li Class="PatchOperationAdd">
-        <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
-          <value>
-            <li>RB_Mead</li>
-          </value>
-        </li>
-        <li Class="PatchOperationAdd">
-        <xpath>/Defs</xpath>
-          <value>
-            <ProcessorFramework.ProcessDef>
-              <defName>RB_Mead</defName>
-              <thingDef>RB_Mead</thingDef>
-              <ingredientFilter>
-                <thingDefs>
-                  <li>RB_Must</li>
-                </thingDefs>
-              </ingredientFilter>
-              <processDays>6</processDays>
-            </ProcessorFramework.ProcessDef>
-          </value>
-        </li>
-        <li Class="PatchOperationRemove">
-          <xpath>*/ThingDef[defName = "RB_MeadFermentingBarrel"]/designationCategory</xpath>
-        </li>
-      </operations>
-      </match>
-  </Operation>
-
-  <!-- Vanilla Factions Expanded - Medieval | OskarPotocki.VanillaFactionsExpanded.MedievalModule -->
-  <Operation Class="PatchOperationFindMod">
-    <mods>
-      <li>Vanilla Factions Expanded - Medieval</li>
-    </mods>
-      <match Class="PatchOperationSequence">
-      <operations>
-        <li Class="PatchOperationRemove">
-          <xpath>*/ThingDef[defName = "VFEM_WineBarrel"]/designationCategory</xpath>
-        </li>
-        <li Class="PatchOperationAdd">
-        <xpath>/Defs</xpath>
-          <value>
-            <ProcessorFramework.ProcessDef>
-              <defName>VFE_Wine</defName>
-              <thingDef>VFEM_Wine</thingDef>
-              <ingredientFilter>
-                <thingDefs>
-                  <li>VFEM_Must</li>
-                </thingDefs>
-              </ingredientFilter>
-              <capacityFactor>2.5</capacityFactor>
-              <usesQuality>true</usesQuality>
-              <qualityDays>(1, 3, 8, 14, 20, 50, 120)</qualityDays>
-            </ProcessorFramework.ProcessDef>
-          </value>
-        </li>
-        <li Class="PatchOperationAdd">
-          <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
-          <value>
-            <li>VFE_Wine</li>
-          </value>
-        </li>
-        <li Class="PatchOperationRemove">
-          <xpath>*/ThingDef[defName = "VFEM_MeatSmoker"]/thingClass</xpath>
-        </li>
-        <li Class="PatchOperationAdd">
-        <xpath>*/ThingDef[defName = "VFEM_MeatSmoker"]</xpath>
-          <value>
-            <drawerType>MapMeshAndRealTime</drawerType>
-          </value>
-        </li>
-        <li Class="PatchOperationAdd">
-        <xpath>/Defs</xpath>
-          <value>
-            <ProcessorFramework.ProcessDef>
-              <defName>VFEM_SmokedMeat</defName>
-              <thingDef>VFEM_SmokedMeat</thingDef>
-              <ingredientFilter>
-                <categories>
-                  <li>MeatRaw</li>
-                </categories>
-                <disallowedThingDefs>
-                  <li>VFEM_SmokedMeat</li>
-                </disallowedThingDefs>
-              </ingredientFilter>
-              <processDays>3</processDays>
-            </ProcessorFramework.ProcessDef>
-          </value>
-        </li>
-        <li Class="PatchOperationReplace">
-          <xpath>*/ThingDef[defName = "VFEM_MeatSmoker"]/comps/li[@Class="ItemProcessor.CompProperties_ItemProcessor"]</xpath>
-          <value>
-            <li Class="ProcessorFramework.CompProperties_Processor">
-              <capacity>75</capacity>
-              <independentProcesses>true</independentProcesses>
-              <processes>
-                <li>VFEM_SmokedMeat</li>
-              </processes>
-            </li>
-          </value>
-        </li>
-      </operations>
-      </match>
-  </Operation>
+  
 
 <!-- Vanilla Factions Expanded - Settlers | OskarPotocki.VanillaFactionsExpanded.SettlersModule -->
   <!--<Operation Class="PatchOperationFindMod">
@@ -780,7 +671,7 @@
         <li Class="PatchOperationRemove">
           <xpath>Defs/ThingDef[thingClass="ExpandableFermenting.Building_Processing"]/thingClass</xpath>
         </li>
-        
+
         <li Class="PatchOperationRemove">
           <xpath>Defs/ThingDef[thingClass="ExpandableFermenting.Building_Fermenting"]</xpath>
         </li>
