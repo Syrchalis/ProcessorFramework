@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- VGP Garden Drinks | dismarzero.VGP.VGPGardenDrinksUF -->
+  <Operation Class="PatchOperationRemove">
+    <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/thingClass</xpath>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]</xpath>
+    <value>
+      <drawerType>MapMeshAndRealTime</drawerType>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationReplace">
+    <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/comps/li[@Class="UniversalFermenter.CompProperties_UniversalFermenter"]</xpath>
+    <value>
+      <li Class="ProcessorFramework.CompProperties_Processor">
+        <capacity>120</capacity>
+        <showProductIcon>true</showProductIcon>
+        <processes>
+          <li>Beer</li>
+          <li>VGP_Rum</li>
+          <li>VGP_BerryWine</li>
+          <li>VGP_AmbrosiaWine</li>
+          <li>VGP_Saki</li>
+          <li>VGP_Vodka</li>
+          <li>VGP_Tequila</li>
+          <li>VGP_Whiskey</li>
+          <li>VGP_Fruitshine</li>
+          <li>VGP_FruitKvass</li>
+        </processes>
+      </li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
+    <value>
+      <li>VGP_Rum</li>
+      <li>VGP_BerryWine</li>
+      <li>VGP_AmbrosiaWine</li>
+      <li>VGP_Saki</li>
+      <li>VGP_Vodka</li>
+      <li>VGP_Tequila</li>
+      <li>VGP_Whiskey</li>
+      <li>VGP_Fruitshine</li>
+      <li>VGP_FruitKvass</li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>VGP Vegetable Garden</li>
+    </mods>
+    <match Class="PatchOperationSequence">
+      <operations>
+        <li Class="PatchOperationAdd">
+        <xpath>/Defs</xpath>
+          <value>
+            <ProcessorFramework.ProcessDef>
+              <defName>VGP_Cider</defName>
+              <thingDef>cider</thingDef>
+              <ingredientFilter>
+                  <thingDefs>
+                      <li>VG_CiderMust</li>
+                  </thingDefs>
+              </ingredientFilter>
+              <processDays>6</processDays>
+            </ProcessorFramework.ProcessDef>
+
+            <ProcessorFramework.ProcessDef>
+              <defName>VGP_Mead</defName>
+              <thingDef>Mead</thingDef>
+              <ingredientFilter>
+                  <thingDefs>
+                      <li>VG_MeadBase</li>
+                  </thingDefs>
+              </ingredientFilter>
+              <processDays>6</processDays>
+            </ProcessorFramework.ProcessDef>
+
+            <ProcessorFramework.ProcessDef>
+              <defName>VGP_BrownAle</defName>
+              <thingDef>BrownAle</thingDef>
+              <ingredientFilter>
+                  <thingDefs>
+                      <li>VG_BrownMalt</li>
+                  </thingDefs>
+              </ingredientFilter>
+              <processDays>6</processDays>
+            </ProcessorFramework.ProcessDef>
+
+            <ProcessorFramework.ProcessDef>
+              <defName>VGP_KvassSoda</defName>
+              <thingDef>KvassSoda</thingDef>
+              <ingredientFilter>
+                  <thingDefs>
+                      <li>VG_KvassSodaWort</li>
+                  </thingDefs>
+              </ingredientFilter>
+              <processDays>5</processDays>
+            </ProcessorFramework.ProcessDef>
+
+            <ProcessorFramework.ProcessDef>
+              <defName>VGP_VegetableKvass</defName>
+              <thingDef>VegetableKvass</thingDef>
+              <ingredientFilter>
+                  <thingDefs>
+                      <li>VG_VegKvassWort</li>
+                  </thingDefs>
+              </ingredientFilter>
+              <processDays>5</processDays>
+            </ProcessorFramework.ProcessDef>
+          </value>
+        </li>
+        <li Class="PatchOperationAdd">
+        <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
+          <value>
+            <li>VGP_Cider</li>
+            <li>VGP_Mead</li>
+            <li>VGP_BrownAle</li>
+            <li>VGP_KvassSoda</li>
+            <li>VGP_VegetableKvass</li>
+          </value>
+        </li>
+        <li Class="PatchOperationAdd">
+        <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
+          <value>
+            <li>VGP_Cider</li>
+            <li>VGP_Mead</li>
+            <li>VGP_BrownAle</li>
+            <li>VGP_KvassSoda</li>
+            <li>VGP_VegetableKvass</li>
+          </value>
+        </li>
+        <li Class="PatchOperationFindMod">
+          <mods>
+            <li>Vanilla Factions Expanded - Medieval</li>
+          </mods>
+          <match Class="PatchOperationAdd">
+          <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
+            <value>
+              <li>VFE_Wine</li>
+            </value>
+          </match>
+          <nomatch Class="PatchOperationSequence">
+            <operations>
+              <li Class="PatchOperationAdd">
+              <xpath>/Defs</xpath>
+                <value>
+                  <ProcessorFramework.ProcessDef>
+                    <defName>VGP_Wine</defName>
+                    <thingDef>Wine</thingDef>
+                    <ingredientFilter>
+                        <thingDefs>
+                            <li>VG_GrapeMust</li>
+                        </thingDefs>
+                    </ingredientFilter>
+                    <processDays>10</processDays>
+                  </ProcessorFramework.ProcessDef>
+                </value>
+              </li>	
+              <li Class="PatchOperationAdd">
+              <xpath>*/ThingDef[defName = "BarrelProcessor"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
+                <value>
+                  <li>VGP_Wine</li>
+                </value>
+              </li>
+              <li Class="PatchOperationAdd">
+              <xpath>*/ThingDef[defName = "VG_LargeFermentingBarrel"]/comps/li[@Class="ProcessorFramework.CompProperties_Processor"]/processes</xpath>
+                <value>
+                  <li>VGP_Wine</li>
+                </value>
+              </li>
+            </operations>
+          </nomatch>
+        </li>
+      </operations>
+    </match>
+  </Operation>
+
+</Patch>

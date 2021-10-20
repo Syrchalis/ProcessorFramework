@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>SM_SaltedMeat</defName>
+    <thingDef>SM_SaltedMeat</thingDef>
+    <ingredientFilter>
+      <categories>
+        <li>MeatRaw</li>
+      </categories>
+      <disallowedThingDefs>
+        <li>SM_SaltedMeat</li>
+        <li>Meat_Human</li>
+        <li>Meat_Megaspider</li>
+      </disallowedThingDefs>
+    </ingredientFilter>
+    <processDays>12</processDays>
+    <filledGraphicSuffix>_Full</filledGraphicSuffix>
+  </ProcessorFramework.ProcessDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>SM_Sausage</defName>
+    <thingDef>SM_Sausage</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>SM_Sausage_Raw</li>
+      </thingDefs>
+    </ingredientFilter>
+    <temperatureSafe>-1.0~23.0</temperatureSafe>
+    <temperatureIdeal>7.0~23.0</temperatureIdeal>
+    <usesQuality>true</usesQuality>
+    <qualityDays>(5, 10, 15, 25, 50, 80, 110)</qualityDays>
+    <filledGraphicSuffix>_Full</filledGraphicSuffix>
+  </ProcessorFramework.ProcessDef>
+
+</Defs>

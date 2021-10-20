@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -101,6 +102,21 @@ namespace ProcessorFramework
             this.excellent = excellent;
             this.masterwork = masterwork;
             this.legendary = legendary;
+        }
+
+        public float DaysForQuality(QualityCategory qualityCategory)
+        {
+            return qualityCategory switch
+            {
+                QualityCategory.Awful => awful,
+                QualityCategory.Poor => poor,
+                QualityCategory.Normal => normal,
+                QualityCategory.Good => good,
+                QualityCategory.Excellent => excellent,
+                QualityCategory.Masterwork => masterwork,
+                QualityCategory.Legendary => legendary,
+                _ => normal,
+            };
         }
 
         public void LoadDataFromXmlCustom(XmlNode xmlRoot)

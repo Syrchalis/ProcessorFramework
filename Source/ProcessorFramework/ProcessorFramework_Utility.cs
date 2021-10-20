@@ -343,10 +343,10 @@ namespace ProcessorFramework
             {
                 foreach (CompProcessor comp in comps) 
                 {
-                    if (comp.Empty)
+                    if (comp.Empty && !comp.EnabledProcesses.EnumerableNullOrEmpty())
                     {
-                        Thing ingredient = ThingMaker.MakeThing(comp.Props.processes.First().ingredientFilter.AnyAllowedDef);
-                        ingredient.stackCount = Mathf.FloorToInt(comp.SpaceLeft / comp.Props.processes.First().capacityFactor);
+                        Thing ingredient = ThingMaker.MakeThing(comp.EnabledProcesses.First().ingredientFilter.AnyAllowedDef);
+                        ingredient.stackCount = Mathf.FloorToInt(comp.SpaceLeft / comp.EnabledProcesses.First().capacityFactor);
                         comp.AddIngredient(ingredient);
                     }
                 }

@@ -20,6 +20,7 @@ namespace ProcessorFramework
         private IEnumerable<CompProcessor> processors;
         private Thing cachedThing;
         private bool callbackActive = false;
+        private int lineHeight = 22;
         //The cachedThing is set at the end of FillTab and compared at the start, allowing the method to detect when the basis for the filters changed, thus resetting the filters
 
         public ITab_ProcessSelection()
@@ -51,9 +52,15 @@ namespace ProcessorFramework
                 return;
             }
             Rect outRect = new Rect(default, size).ContractedBy(12f);
-            outRect.yMin += 24;
-            outRect.height -= 24;
-            Rect viewRect = new Rect(0f, 0f, outRect.width + 8, outRect.height + 8);
+            outRect.yMin += 24; //top space
+            outRect.height -= 24; //height adjust
+            int viewRectHeight = processors.First().Props.processes.Count * lineHeight + 80; //increase scroll area for each product listed and extra space at the end
+            foreach (KeyValuePair<ProcessDef, bool> keyValuePair in categoryOpen)
+            {
+                //adjust scroll area for each node opened
+                viewRectHeight += processors.First().Props.processes.Contains(keyValuePair.Key) && keyValuePair.Value ? keyValuePair.Key.ingredientFilter.AllowedDefCount * 24 : 0;
+            }
+            Rect viewRect = new Rect(0f, 0f, outRect.width - GUI.skin.verticalScrollbar.fixedWidth - 1f, viewRectHeight);
             Widgets.DrawMenuSection(outRect);
             Rect buttonRect = new Rect(outRect.x + 1f, outRect.y + 1f, (outRect.width - 2f) / 2f, 24f);
             Text.Font = GameFont.Small;
@@ -76,13 +83,8 @@ namespace ProcessorFramework
                 }
                 SoundDefOf.Checkbox_TurnedOn.PlayOneShotOnCamera(null);
             }
-            outRect.yMin += 30;
-            outRect.xMax -= 4;
-            outRect.height -= 12;
-            Rect listRect = new Rect(0f, 2f, viewRect.width, 9999f);
-            GUI.BeginGroup(viewRect);
-            GUI.color = Widgets.MenuSectionBGFillColor;
-            Text.Anchor = TextAnchor.UpperLeft;
+            outRect.yMin += buttonRect.height + 6;
+            Rect listRect = new Rect(0f, 2f, 280, 9999f);
             Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
             foreach (ProcessDef processDef in processors.First().Props.processes)
             {
@@ -93,8 +95,7 @@ namespace ProcessorFramework
                 DoItemsList(ref listRect, processors, processDef);
             }
             Widgets.EndScrollView();
-            GUI.EndGroup();
-            if (Widgets.ButtonText(new Rect(outRect.xMin + 24, outRect.yMax + 16, outRect.width - 48, 24f), "PF_ApplySettings".Translate()))
+            if (Widgets.ButtonText(new Rect(outRect.xMin + 24, outRect.yMax + 4, outRect.width - 48, 24f), "PF_ApplySettings".Translate()))
             {
                 foreach (CompProcessor processor in processors)
                 {
@@ -111,11 +112,11 @@ namespace ProcessorFramework
             bool open = categoryOpen[processDef];
             
             Rect headerRect = listRect.TopPartPixels(24);
-            Rect expandRect = headerRect.LeftPartPixels(20);
-            headerRect.xMin += 24;
-            Rect checkboxRect = headerRect.RightPartPixels(56);
+            Rect arrowRect = new Rect(headerRect.x, headerRect.y, 18, 18);
+            headerRect.xMin += 18;
+            Rect checkboxRect = headerRect.RightPartPixels(48);
             Texture2D tex = open ? TexButton.Collapse : TexButton.Reveal;
-            if (Widgets.ButtonImage(expandRect, tex, true))
+            if (Widgets.ButtonImage(arrowRect, tex, true))
             {
                 if (open) SoundDefOf.TabClose.PlayOneShotOnCamera(null);
                 else SoundDefOf.TabOpen.PlayOneShotOnCamera(null);
@@ -123,7 +124,7 @@ namespace ProcessorFramework
             }
 
             Widgets.Label(headerRect, processDef.thingDef.LabelCap);
-            Widgets.Checkbox(new Vector2(checkboxRect.xMin, checkboxRect.yMin), ref productAllowed);
+            Widgets.Checkbox(new Vector2(checkboxRect.xMin, checkboxRect.yMin), ref productAllowed, 20);
             localProductFilter.SetAllow(processDef.thingDef, productAllowed);
 
             if (open)
@@ -131,16 +132,24 @@ namespace ProcessorFramework
                 headerRect.xMin += 12;
                 foreach (ThingDef ingredient in processDef.ingredientFilter.AllowedThingDefs)
                 {
-                    checkboxRect.y += 22;
-                    headerRect.y += 22;
+                    checkboxRect.y += lineHeight;
+                    headerRect.y += lineHeight;
                     bool ingredientAllowed = localIngredientFilter.Allows(ingredient);
                     Widgets.Label(headerRect, ingredient.LabelCap);
-                    Widgets.Checkbox(new Vector2(checkboxRect.xMin, checkboxRect.yMin), ref ingredientAllowed);
+                    if (processDef.efficiency != 1)
+                    {
+                        Text.Font = GameFont.Tiny;
+                        GUI.color = Color.gray;
+                        Widgets.Label(new Rect(headerRect.width - 58f, headerRect.y + 2, 30f, 20f), "x" + (1f / processDef.efficiency).ToStringByStyle(ToStringStyle.FloatMaxTwo));
+                        Text.Font = GameFont.Small;
+                        GUI.color = Color.white;
+                    }
+                    Widgets.Checkbox(new Vector2(checkboxRect.xMin, checkboxRect.yMin), ref ingredientAllowed, 20);
                     localIngredientFilter.SetAllow(ingredient, ingredientAllowed);
-                    listRect.y += 22;
+                    listRect.y += lineHeight;
                 }
             }
-            listRect.y += 28;
+            listRect.y += lineHeight;
         }
         public void ProductFilterCallback()
         {

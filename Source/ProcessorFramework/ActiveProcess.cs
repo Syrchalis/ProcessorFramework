@@ -63,17 +63,7 @@ namespace ProcessorFramework
         {
             get
             {
-                return targetQuality switch
-                {
-                    QualityCategory.Awful => processDef.qualityDays.awful,
-                    QualityCategory.Poor => processDef.qualityDays.poor,
-                    QualityCategory.Normal => processDef.qualityDays.normal,
-                    QualityCategory.Good => processDef.qualityDays.good,
-                    QualityCategory.Excellent => processDef.qualityDays.excellent,
-                    QualityCategory.Masterwork => processDef.qualityDays.masterwork,
-                    QualityCategory.Legendary => processDef.qualityDays.legendary,
-                    _ => processDef.qualityDays.normal,
-                };
+                return processDef.qualityDays.DaysForQuality(targetQuality);
             }
         }
         public QualityCategory CurrentQuality
@@ -291,18 +281,24 @@ namespace ProcessorFramework
                     TargetQuality.GetLabel().Named("TARGET")));
 
                 qualityTip.AppendTagged("PF_QualityTooltip2".Translate(
-                    Mathf.RoundToInt(processDef.qualityDays.awful * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("AWFUL"),
-                    Mathf.RoundToInt(processDef.qualityDays.poor * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("POOR"),
-                    Mathf.RoundToInt(processDef.qualityDays.normal * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("NORMAL"),
-                    Mathf.RoundToInt(processDef.qualityDays.good * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("GOOD"),
-                    Mathf.RoundToInt(processDef.qualityDays.excellent * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("EXCELLENT"),
-                    Mathf.RoundToInt(processDef.qualityDays.masterwork * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("MASTERWORK"),
-                    Mathf.RoundToInt(processDef.qualityDays.legendary * GenDate.TicksPerDay).ToStringTicksToPeriod(canUseDecimals: false).Named("LEGENDARY")
+                    TimeForQualityLeft(QualityCategory.Awful).Named("AWFUL"),
+                    TimeForQualityLeft(QualityCategory.Poor).Named("POOR"),
+                    TimeForQualityLeft(QualityCategory.Normal).Named("NORMAL"),
+                    TimeForQualityLeft(QualityCategory.Good).Named("GOOD"),
+                    TimeForQualityLeft(QualityCategory.Excellent).Named("EXCELLENT"),
+                    TimeForQualityLeft(QualityCategory.Masterwork).Named("MASTERWORK"),
+                    TimeForQualityLeft(QualityCategory.Legendary).Named("LEGENDARY")
                 ));
 
                 return qualityTip.ToString();
             }
         }
+        public string TimeForQualityLeft(QualityCategory qualityCategory)
+        {
+            int ticksLeft = Mathf.Max(Mathf.RoundToInt(processDef.qualityDays.DaysForQuality(qualityCategory) * GenDate.TicksPerDay - ActiveProcessTicks), 0);
+            return ticksLeft == 0 ? "PF_None".Translate() : ticksLeft.ToStringTicksToPeriod(canUseDecimals: false);
+        }
+
         public string ProcessTooltip(string ingredientLabel, string productLabel)
         {
             StringBuilder creatingTip = new StringBuilder();
@@ -311,7 +307,7 @@ namespace ProcessorFramework
 
             creatingTip.AppendTagged("PF_CreatingTooltip1".Translate(productLabel.Named("PRODUCT"), ingredientLabel.Named("INGREDIENT"), qualityStr.Named("QUALITY")));
             creatingTip.AppendTagged(processDef.usesQuality
-                ? "processDef".Translate(Mathf.RoundToInt(processDef.qualityDays.awful * GenDate.TicksPerDay).ToStringTicksToPeriod().Named("TOAWFUL"))
+                ? "PF_CreatingTooltip2_Quality".Translate(Mathf.RoundToInt(processDef.qualityDays.awful * GenDate.TicksPerDay).ToStringTicksToPeriod().Named("TOAWFUL"))
                 : "PF_CreatingTooltip2_NoQuality".Translate(Mathf.RoundToInt(processDef.processDays * GenDate.TicksPerDay).ToStringTicksToPeriod().Named("TIME")));
 
             if (processDef.usesTemperature)

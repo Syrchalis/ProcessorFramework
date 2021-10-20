@@ -87,8 +87,8 @@
 	<PF_SpeedTooltip1>{COMPLETEPERCENT} complete\nSpeed: {SPEED}\n\n</PF_SpeedTooltip1>
 	<PF_SpeedTooltip2>Speed factors:\nTemperature: {TEMPERATURE}\nWind: {WIND}\nSun: {SUN}\nRain: {RAIN}\nSnow: {SNOW}\n\n</PF_SpeedTooltip2>
 	<PF_SpeedTooltip3>Estimated completion in: {ESTIMATED}</PF_SpeedTooltip3>
-	<PF_QualityTooltip1>Current quality: {CURRENT}\nTarget quality: {TARGET}\n\n</PF_QualityTooltip1>
-	<PF_QualityTooltip2>Processing time for\nAwful: {AWFUL}\nPoor: {POOR}\nNormal: {NORMAL}\nGood: {GOOD}\nExcellent: {EXCELLENT}\nMasterwork: {MASTERWORK}\nLegendary: {LEGENDARY}</PF_QualityTooltip2>
+	<PF_QualityTooltip1>Target quality: {TARGET}\nCurrent quality: {CURRENT}\n\n</PF_QualityTooltip1>
+	<PF_QualityTooltip2>Processing time left for\nAwful: {AWFUL}\nPoor: {POOR}\nNormal: {NORMAL}\nGood: {GOOD}\nExcellent: {EXCELLENT}\nMasterwork: {MASTERWORK}\nLegendary: {LEGENDARY}</PF_QualityTooltip2>
 	<PF_QualityTooltipNA>{PRODUCT_label} is always the same quality.</PF_QualityTooltipNA>
 
 </LanguageData>

@@ -43,7 +43,7 @@
       <li Class="ProcessorFramework.CompProperties_Processor">
         <capacity>25</capacity>
         <independentProcesses>true</independentProcesses>
-        <parallelProcesses>true</parallelProcesses>
+        <parallelProcesses>false</parallelProcesses>
         <dropIngredients>false</dropIngredients>
         <showProductIcon>true</showProductIcon>
         <barOffset>(0.0, 0.25)</barOffset>
@@ -76,7 +76,7 @@
     </ingredientFilter>
     <processDays>6</processDays> <!-- in days, a day is 60,000 ticks -->
     <capacityFactor>3.0</capacityFactor>
-    <efficiency>1.0</efficiency>
+    <efficiency>2.2</efficiency>
     <usesTemperature>true</usesTemperature>
     <temperatureSafe>-1.0~32.0</temperatureSafe>
     <temperatureIdeal>7.0~32.0</temperatureIdeal>

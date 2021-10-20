@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VGP_Rum</defName>
+    <thingDef>rum</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>Wort</li>
+      </thingDefs>
+    </ingredientFilter>
+    <processDays>6</processDays>
+    <usesQuality>true</usesQuality>
+    <qualityDays>(6, 6, 6, 8.75, 10.75, 12.75, 15.75)</qualityDays>	
+  </ProcessorFramework.ProcessDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VGP_BerryWine</defName>
+    <thingDef>VGP_BerryWine</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>CPD_WineMust</li>
+      </thingDefs>
+    </ingredientFilter>
+    <processDays>7.5</processDays>
+    <usesQuality>true</usesQuality>
+    <qualityDays>(7.5, 7.5, 7.5, 9.75, 11.75, 13.75, 16.75)</qualityDays>				  
+  </ProcessorFramework.ProcessDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VGP_AmbrosiaWine</defName>
+    <thingDef>VG_AmbrosiaWine</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>VG_AmbrosiaMust</li>
+      </thingDefs>
+    </ingredientFilter>
+    <processDays>7.5</processDays>
+    <usesQuality>true</usesQuality>
+    <qualityDays>(7.5, 7.5, 7.5, 9.75, 11.75, 13.75, 16.75)</qualityDays>				  
+  </ProcessorFramework.ProcessDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VGP_Saki</defName>
+    <thingDef>saki</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>CPD_RiceMash</li>
+      </thingDefs>
+    </ingredientFilter>    
+    <processDays>5.25</processDays>
+    <usesQuality>true</usesQuality>
+    <qualityDays>(5.25, 5.25, 5.25, 7.25, 9.25, 11.25, 14.25)</qualityDays>				  
+  </ProcessorFramework.ProcessDef>
+  
+  <ProcessorFramework.ProcessDef>
+    <defName>VGP_Vodka</defName>
+    <thingDef>CPD_Vodka</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>CPD_VodkaPrecursor</li>
+      </thingDefs>
+    </ingredientFilter>
+    <processDays>4.5</processDays>	  
+  </ProcessorFramework.ProcessDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VGP_Tequila</defName>
+    <thingDef>tequila</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>VG_AgaveMust</li>
+      </thingDefs>
+    </ingredientFilter>    
+    <processDays>6.25</processDays>
+    <usesQuality>true</usesQuality>
+    <qualityDays>(6.25, 6.25, 6.25, 8.75, 10.75, 12.75, 15.75)</qualityDays>				  
+  </ProcessorFramework.ProcessDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VGP_Whiskey</defName>
+    <thingDef>CPD_Whiskey</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>CPD_CornWort</li>
+      </thingDefs>
+    </ingredientFilter>    
+    <processDays>5.25</processDays>
+    <usesQuality>true</usesQuality>
+    <qualityDays>(5.25, 5.25, 5.25, 7.25, 9.25, 11.25, 14.25)</qualityDays>				  
+  </ProcessorFramework.ProcessDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VGP_Fruitshine</defName>
+    <thingDef>Fruitshine</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>VG_FruitMash</li>
+      </thingDefs>
+    </ingredientFilter>    
+    <processDays>5.25</processDays>
+    <usesQuality>true</usesQuality>
+    <qualityDays>(5.25, 5.25, 5.25, 7.25, 9.25, 11.25, 14.25)</qualityDays>				  
+  </ProcessorFramework.ProcessDef>
+
+  <ProcessorFramework.ProcessDef>
+    <defName>VGP_FruitKvass</defName>
+    <thingDef>FruitKvass</thingDef>
+    <ingredientFilter>
+      <thingDefs>
+        <li>VG_FruitKvassWort</li>
+      </thingDefs>
+    </ingredientFilter>    
+    <processDays>3.75</processDays>
+  </ProcessorFramework.ProcessDef>
+
+</Defs>

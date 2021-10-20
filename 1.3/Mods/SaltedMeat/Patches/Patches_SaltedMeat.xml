@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- Salted Meat | Argon.SaltedMeatRemake-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>*/ThingDef[defName = "SM_MeatRack" or defName = "SM_SausagePost"]/tickerType</xpath>
+    <value>
+      <tickerType>Rare</tickerType>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+  <xpath>*/ThingDef[defName = "SM_MeatRack"]/comps/li[@Class="CompProperties_Refuelable"]</xpath>
+    <value>
+      <consumeFuelOnlyWhenUsed>true</consumeFuelOnlyWhenUsed>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationRemove">
+    <xpath>*/ThingDef[defName = "SM_MeatRack" or defName = "SM_SausagePost"]/thingClass</xpath>
+  </Operation>
+
+  <Operation Class="PatchOperationReplace">
+  <xpath>*/ThingDef[defName = "SM_MeatRack"]/comps/li[@Class="ItemProcessor.CompProperties_ItemProcessor"]</xpath>
+    <value>
+      <li Class="ProcessorFramework.CompProperties_Processor">
+        <capacity>75</capacity>
+        <independentProcesses>true</independentProcesses>
+        <dropIngredients>true</dropIngredients>
+        <processes>
+          <li>SM_SaltedMeat</li>
+        </processes>
+      </li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationReplace">
+  <xpath>*/ThingDef[defName = "SM_MeatRack"]/graphicData/texPath</xpath>
+    <value>
+      <texPath>Things/Building/Mods/SM_MeatRack</texPath>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationReplace">
+  <xpath>*/ThingDef[defName = "SM_SausagePost"]/graphicData/texPath</xpath>
+    <value>
+      <texPath>Things/Building/Mods/SM_SausagePost</texPath>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationReplace">
+  <xpath>*/ThingDef[defName = "SM_SausagePost"]/comps/li[@Class="ItemProcessor.CompProperties_ItemProcessor"]</xpath>
+    <value>
+      <li Class="ProcessorFramework.CompProperties_Processor">
+        <capacity>30</capacity>
+        <independentProcesses>true</independentProcesses>
+        <dropIngredients>true</dropIngredients>
+        <processes>
+          <li>SM_Sausage</li>
+        </processes>
+      </li>
+    </value>
+  </Operation>
+
+  <!-- Yeah im not dealing with this -->
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Vanilla Fishing Expanded</li>
+    </mods>
+    <match Class="PatchOperationSequence">
+      <operations>
+        <li Class="PatchOperationAdd">
+          <xpath>/Defs</xpath>
+          <value>
+          <ProcessorFramework.ProcessDef>
+            <defName>SM_DriedFish</defName>
+            <thingDef>SM_DriedFish</thingDef>
+            <ingredientFilter>
+              <categories>
+                <li>VCEF_RawFishCategory</li>
+              </categories>
+              <disallowedThingDefs>
+                  <li>VCEF_RawAnchovy</li>
+                  <li>VCEF_RawAngelfish</li>
+                  <li>VCEF_RawGuppy</li>
+                  <li>VCEF_RawHerring</li>
+                  <li>VCEF_RawGoldfish</li>
+                  <li>VCEF_RawMinnow</li>
+                  <li>VCEF_RawClownfish</li>
+                  <li>VCEF_RawSprat</li>
+                  <li>SM_DriedFish</li>
+              </disallowedThingDefs>
+            </ingredientFilter>
+            <processDays>20</processDays>
+            <filledGraphicSuffix>_Full</filledGraphicSuffix>
+          </ProcessorFramework.ProcessDef>
+          </value>
+        </li>
+        <li Class="PatchOperationReplace">
+        <xpath>*/ThingDef[defName = "SM_FishDrier"]/comps/li[@Class="ItemProcessor.CompProperties_ItemProcessor"]</xpath>
+          <value>
+            <li Class="ProcessorFramework.CompProperties_Processor">
+              <capacity>75</capacity>
+              <independentProcesses>true</independentProcesses>
+              <dropIngredients>true</dropIngredients>
+              <processes>
+                <li>SM_DriedFish</li>
+              </processes>
+            </li>
+          </value>
+        </li>
+        <li Class="PatchOperationRemove">
+          <xpath>*/ThingDef[defName = "SM_FishDrier"]/thingClass</xpath>
+        </li>
+        <li Class="PatchOperationReplace">
+          <xpath>*/ThingDef[defName = "SM_FishDrier"]/tickerType</xpath>
+          <value>
+            <tickerType>Rare</tickerType>
+          </value>
+        </li>
+        <li Class="PatchOperationReplace">
+        <xpath>*/ThingDef[defName = "SM_FishDrier"]/graphicData/texPath</xpath>
+          <value>
+            <texPath>Things/Building/Mods/SM_FishDrier</texPath>
+          </value>
+        </li>
+        <li Class="PatchOperationAdd">
+        <xpath>*/ThingDef[defName = "SM_FishDrier"]/comps/li[@Class="CompProperties_Refuelable"]</xpath>
+          <value>
+            <consumeFuelOnlyWhenUsed>true</consumeFuelOnlyWhenUsed>
+          </value>
+        </li>
+      </operations>
+    </match>
+  </Operation>
+
+</Patch>
