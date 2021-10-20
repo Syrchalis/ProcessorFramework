@@ -467,20 +467,35 @@ namespace ProcessorFramework
                         int amount = GenMath.RoundRandom((activeProcess.ingredientCount * activeProcess.processDef.capacityFactor / Props.capacity) * bonusOutput.amount);
                         if (amount > 0)
                         {
-                            Thing bonusThing = ThingMaker.MakeThing(bonusOutput.thingDef, null);
-                            bonusThing.stackCount = amount;
-                            GenPlace.TryPlaceThing(bonusThing, parent.Position, parent.Map, ThingPlaceMode.Near);
+                            if (bonusOutput.thingDef.race != null)
+                            {
+                                for (int i = 0; i < amount; i++)
+                                {
+                                    PawnGenerationRequest request = new PawnGenerationRequest(bonusOutput.thingDef.race.AnyPawnKind, Faction.OfPlayerSilentFail, PawnGenerationContext.NonPlayer, -1, false, true, false, false, true, false, 1f, false, true, true, true, false, false, false, false, 0f, 0f, null, 1f, null, null, null, null, null, null, null, null, null, null, null, null, null, false, false, false);
+                                    Pawn productPawn = PawnGenerator.GeneratePawn(request);
+                                    GenSpawn.Spawn(productPawn, parent.Position, parent.Map);
+                                }
+                            }
+                            else
+                            {
+                                Thing bonusThing = ThingMaker.MakeThing(bonusOutput.thingDef, null);
+                                bonusThing.stackCount = amount;
+                                GenPlace.TryPlaceThing(bonusThing, parent.Position, parent.Map, ThingPlaceMode.Near);
+                            }
                         }
                     }
                 }
 
             }
+            //Remove ingredients and active process
             foreach (Thing ingredient in activeProcess.ingredientThings)
             {
                 innerContainer.Remove(ingredient);
                 ingredient.Destroy();
             }
             activeProcesses.Remove(activeProcess);
+
+            //Destroy chance
             if (Rand.Chance(activeProcess.processDef.destroyChance))
             {
                 if (PF_Settings.replaceDestroyedProcessors)
