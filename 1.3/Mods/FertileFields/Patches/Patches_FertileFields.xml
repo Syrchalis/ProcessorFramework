@@ -30,7 +30,7 @@
         <dropIngredients>true</dropIngredients>
         <showProductIcon>true</showProductIcon>
         <processes>
-          <li>RFF_Fertilizer</li>
+          <li>RFF_FertilizerBin</li>
         </processes>
       </li>
     </value>
@@ -44,7 +44,7 @@
         <dropIngredients>true</dropIngredients>
         <showProductIcon>true</showProductIcon>
         <processes>
-          <li>RFF_Fertilizer</li>
+          <li>RFF_FertilizerBarrel</li>
         </processes>
       </li>
     </value>

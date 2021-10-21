@@ -322,17 +322,22 @@ namespace ProcessorFramework
 
         internal static void EmptyObject(IEnumerable<CompProcessor> comps)
         {
+            
             foreach (CompProcessor comp in comps) 
             {
+                List<ActiveProcess> finishedProcesses = new List<ActiveProcess>();
                 foreach (ActiveProcess activeProcess in comp.activeProcesses)
                 {
                     if (activeProcess.Complete)
                     {
-                        Thing product = comp.TakeOutProduct(activeProcess);
-                        GenPlace.TryPlaceThing(product, comp.parent.Position, comp.parent.Map, ThingPlaceMode.Near);
+                        finishedProcesses.Add(activeProcess);
                     }
                 }
-
+                foreach (ActiveProcess finishedProcess in finishedProcesses)
+                {
+                    Thing product = comp.TakeOutProduct(finishedProcess);
+                    GenPlace.TryPlaceThing(product, comp.parent.Position, comp.parent.Map, ThingPlaceMode.Near);
+                }
             }
             gooseAngle = Rand.Range(0, 360);
             SoundStarter.PlayOneShotOnCamera(DefOf.PF_Honk);

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-
+using System.Linq;
 using RimWorld;
 using Verse;
 using Verse.AI;
 
 namespace ProcessorFramework
 {
-
+	[HotSwappable]
 	public class JobDriver_EmptyProcessor : JobDriver
 	{
 
@@ -21,7 +21,7 @@ namespace ProcessorFramework
 
 		public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-			return pawn.Reserve(Processor, job, 1, -1, null);
+			return pawn.Reserve(Processor, job, Processor.TryGetComp<CompProcessor>().activeProcesses.Count(x => x.Complete), 0, DefOf.PF_Empty, errorOnFailed);
 		}
 
 		protected override IEnumerable<Toil> MakeNewToils()
@@ -30,10 +30,14 @@ namespace ProcessorFramework
 			// Verify fermenter validity
 			this.FailOn(() => !comp.AnyComplete || comp.Empty);
 			this.FailOnDestroyedNullOrForbidden(ProcessorInd);
-
-			// Reserve fermenter
-			yield return Toils_Reserve.Reserve(ProcessorInd);
-
+			AddEndCondition(delegate
+			{
+				if (comp.Empty)
+				{
+					return JobCondition.Succeeded;
+				}
+				return JobCondition.Ongoing;
+			});
 			// Go to the fermenter
 			yield return Toils_Goto.GotoThing(ProcessorInd, PathEndMode.ClosestTouch);
 
@@ -46,8 +50,12 @@ namespace ProcessorFramework
                 initAction = () =>
                 {
 					ActiveProcess activeProcess = comp.activeProcesses.Find(x => x.Complete || x.Ruined);
+					if (activeProcess == null)
+                    {
+						EndJobWith(JobCondition.Incompletable);
+						return;
+					}
 					Thing product = comp.TakeOutProduct(activeProcess);
-
 					if (product == null || product.stackCount == 0)
                     {
 						EndJobWith(JobCondition.Succeeded);
@@ -78,7 +86,7 @@ namespace ProcessorFramework
 						// If there is no spot to store the product, end this job
 						else
 						{
-							EndJobWith(JobCondition.Incompletable);
+							EndJobWith(JobCondition.Succeeded);
 						}
 					}
                 },

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 
 namespace ProcessorFramework
 {
+    [HotSwappable]
     public class WorkGiver_FillProcessor : WorkGiver_Scanner
     {
         public override PathEndMode PathEndMode => PathEndMode.Touch;
@@ -26,7 +28,7 @@ namespace ProcessorFramework
             CompProcessor comp = t.Thing.TryGetComp<CompProcessor>();
             if (comp != null)
             {
-                return 1f / comp.SpaceLeft;
+                return 1f / comp.unreservedSpaceLeft;
             }
             return 0f;
         }
@@ -39,7 +41,7 @@ namespace ProcessorFramework
             if (!comp.EnabledProcesses.EnumerableNullOrEmpty())
             {
                 float minFactor = comp.EnabledProcesses.MinBy(x => x.capacityFactor).capacityFactor;
-                if (comp.SpaceLeft < minFactor)
+                if (comp.unreservedSpaceLeft < minFactor)
                 {
                     return false;
                 }
@@ -52,48 +54,64 @@ namespace ProcessorFramework
 
             if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null
                             || t.IsForbidden(pawn)
-                            || !pawn.CanReserveAndReach(t, PathEndMode.Touch, pawn.NormalMaxDanger(), 1, -1, null, forced)
+                            || !pawn.CanReserveAndReach(t, PathEndMode.Touch, pawn.NormalMaxDanger(), 10, 0, null, forced)
                             || t.IsBurning())
             {
                 return false;
             }
-
-            if (FindIngredient(pawn, t) == null)
+            if (FindIngredient(pawn, comp) == null)
             {
                 JobFailReason.Is("PF_NoIngredient".Translate());
                 return false;
             }
-
             return true;
         }
 
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
-            Thing t2 = FindIngredient(pawn, t);
-            return new Job(DefOf.FillProcessor, t, t2);
+            CompProcessor comp = t.TryGetComp<CompProcessor>();
+            Thing ingredient = FindIngredient(pawn, comp);
+            if (comp.queuedIngredient == null) comp.queuedIngredient = ingredient.def;
+            Job job = new Job(DefOf.FillProcessor, t, ingredient)
+            {
+                count = Mathf.Min(Mathf.FloorToInt(comp.unreservedSpaceLeft / comp.Props.processes.Find(x => x.ingredientFilter.Allows(ingredient)).capacityFactor), pawn.carryTracker.AvailableStackSpace(ingredient.def))
+            };
+            return job;
         }
 
-        private static Thing FindIngredient(Pawn pawn, Thing processor)
+        private Thing FindIngredient(Pawn pawn, CompProcessor comp)
         {
-            CompProcessor comp = processor.TryGetComp<CompProcessor>();
             if (comp is null)
             {
                 return null;
             }
+
             ThingFilter filter;
-            if (comp.Props.parallelProcesses || comp.Empty)
+            if (comp.Props.parallelProcesses || (comp.Empty && comp.queuedIngredient == null))
             {
                 filter = comp.ingredientFilter;
             }
-            else
+            else if (!comp.activeProcesses.NullOrEmpty())
             {
                 filter = comp.activeProcesses.First().processDef.ingredientFilter;
             }
-            //Needs to check that there is enough ingredient for at least one product && needs to check that space left is enough to accomodate the product before sending to JobDriver
-            Predicate<Thing> validator = x => !x.IsForbidden(pawn) && pawn.CanReserve(x) && filter.Allows(x) && x.stackCount >= 1f / comp.EnabledProcesses.First(y => y.ingredientFilter.Allows(x)).efficiency
-            && comp.SpaceLeft >= comp.EnabledProcesses.First(y => y.ingredientFilter.Allows(x)).capacityFactor;
-            return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, filter.BestThingRequest, PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, validator); ;
+            else
+            {
+                filter = comp.EnabledProcesses.First(x => x.ingredientFilter.Allows(comp.queuedIngredient)).ingredientFilter;
+            }
+            //Needs to check that there is enough ingredient for at least one product && needs to check that space left is enough to accomodate one ingredient before sending to JobDriver
+            bool validator(Thing x)
+            {
+                if (x.IsForbidden(pawn) || !filter.Allows(x)) return false;
+                ProcessDef processDef = comp.EnabledProcesses.First(y => y.ingredientFilter.Allows(x));
+                if (!pawn.CanReserve(x, 10, Mathf.Min(Mathf.FloorToInt(comp.unreservedSpaceLeft / processDef.capacityFactor), x.stackCount)) || x.stackCount < 1f / processDef.efficiency || comp.unreservedSpaceLeft < processDef.capacityFactor)
+                {
+                    return false;
+                }
+                return true;
+            }
+            return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, filter.BestThingRequest, PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, validator);
         }
     }
 }

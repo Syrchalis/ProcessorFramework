@@ -28,7 +28,8 @@ Refer to https://github.com/Syrchalis/ProcessorFramework/wiki</description>
 		<li>Owlchemist.SimpleChains.Lumber</li>
 	</loadBefore>
   <loadAfter>
-    <li>VanillaExpanded.VTEXE</li>
+    <li>Argon.SaltedMeatRemake</li>
+    <li>dismarzero.VGP.VGPGardenDrinksUF</li>
   </loadAfter>
 	<modDependencies>
     <li>

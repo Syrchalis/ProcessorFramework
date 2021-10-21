@@ -27,7 +27,8 @@ namespace ProcessorFramework
         public ThingFilter productFilter = new ThingFilter();
         public ThingFilter ingredientFilter = new ThingFilter();
 
-        public bool callbackActive = false;
+        public int unreservedSpaceLeft;
+        public ThingDef queuedIngredient;
 
         //----------------------------------------------------------------------------------------------------
         // Properties
@@ -37,7 +38,7 @@ namespace ProcessorFramework
         public bool Empty => TotalIngredientCount <= 0;
         public bool AnyComplete => activeProcesses.Any(x => x.Complete);
         public int SpaceLeft => Props.capacity - TotalIngredientCount;
-        public int TotalIngredientCount => Mathf.CeilToInt(activeProcesses.Sum(x => x.ingredientCount * x.processDef.capacityFactor));
+        public int TotalIngredientCount => activeProcesses.Sum(x => Mathf.CeilToInt(x.ingredientCount * x.processDef.capacityFactor));
         public IEnumerable<ProcessDef> EnabledProcesses
         {
             get
@@ -130,6 +131,7 @@ namespace ProcessorFramework
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
+            unreservedSpaceLeft = Props.capacity;
             innerContainer = new ThingOwner<Thing>(this);
             productFilter = new ThingFilter();
             ingredientFilter = new ThingFilter();
@@ -348,6 +350,7 @@ namespace ProcessorFramework
                 }
                 ConsumeFuel(ticks);
             }
+            //Log.Message("Space: " + SpaceLeft + " | unreservedSpaceLeft: " + unreservedSpaceLeft);
         }
         public void AdjustPowerConsumption()
         {
@@ -405,6 +408,7 @@ namespace ProcessorFramework
                 {
                     GraphicChange(false);
                 }
+                queuedIngredient = null;
             }
         }
         private void TryAddNewProcess(Thing ingredient, ProcessDef processDef)
@@ -471,7 +475,7 @@ namespace ProcessorFramework
                             {
                                 for (int i = 0; i < amount; i++)
                                 {
-                                    PawnGenerationRequest request = new PawnGenerationRequest(bonusOutput.thingDef.race.AnyPawnKind, Faction.OfPlayerSilentFail, PawnGenerationContext.NonPlayer, -1, false, true, false, false, true, false, 1f, false, true, true, true, false, false, false, false, 0f, 0f, null, 1f, null, null, null, null, null, null, null, null, null, null, null, null, null, false, false, false);
+                                    PawnGenerationRequest request = new PawnGenerationRequest(bonusOutput.thingDef.race.AnyPawnKind, null, PawnGenerationContext.NonPlayer, -1, false, true, false, false, true, false, 1f, false, true, true, true, false, false, false, false, 0f, 0f, null, 1f, null, null, null, null, null, null, null, null, null, null, null, null, null, false, false, false);
                                     Pawn productPawn = PawnGenerator.GeneratePawn(request);
                                     GenSpawn.Spawn(productPawn, parent.Position, parent.Map);
                                 }
@@ -509,6 +513,7 @@ namespace ProcessorFramework
             {
                 GraphicChange(true);
             }
+            unreservedSpaceLeft += Mathf.CeilToInt(activeProcess.ingredientCount * activeProcess.processDef.capacityFactor);
             if (!activeProcesses.Any(x => x.processDef.usesQuality))
             {
                 emptyNow = false;

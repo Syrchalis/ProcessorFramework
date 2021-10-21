@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+  <ReservationLayerDef>
+    <defName>PF_Fill</defName>
+  </ReservationLayerDef>
+
+  <ReservationLayerDef>
+    <defName>PF_Empty</defName>
+  </ReservationLayerDef>
+</Defs>

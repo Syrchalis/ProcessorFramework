@@ -131,7 +131,9 @@ namespace ProcessorFramework
             if (open)
             {
                 headerRect.xMin += 12;
-                foreach (ThingDef ingredient in processDef.ingredientFilter.AllowedThingDefs)
+                List<ThingDef> sortedIngredients = processDef.ingredientFilter.AllowedThingDefs.ToList();
+                sortedIngredients.SortBy(x => x.label);
+                foreach (ThingDef ingredient in sortedIngredients)
                 {
                     checkboxRect.y += lineHeight;
                     headerRect.y += lineHeight;

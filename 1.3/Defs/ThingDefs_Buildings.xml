@@ -51,7 +51,6 @@
         <colorCoded>false</colorCoded>
         <processes>
           <li>Beer</li>
-          <li>Test</li>
         </processes>
       </li>
       <li Class="CompProperties_Forbiddable"/>
@@ -97,10 +96,9 @@
     <color>(255, 255, 255)</color> <!-- 0-255 or 0.0-1.0 -->
     <customLabel></customLabel>
     <destroyChance>0.0</destroyChance>
-    <bonusOutputs></bonusOutputs>
   </ProcessorFramework.ProcessDef>
 
-  <ProcessorFramework.ProcessDef>
+  <!--<ProcessorFramework.ProcessDef>
     <defName>Test</defName>
     <thingDef>RawPotatoes</thingDef>
     <ingredientFilter>
@@ -114,12 +112,10 @@
         <li>Chocolate</li>
       </thingDefs>
     </ingredientFilter>
-    <processDays>0.1</processDays>
-    <efficiency>1</efficiency>
-    <bonusOutputs>
-      <Rat>(1, 1)</Rat>
-    </bonusOutputs>
-  </ProcessorFramework.ProcessDef>
+    <processDays>0.05</processDays>
+    <efficiency>1.0</efficiency>
+    <capacityFactor>3.7</capacityFactor>
+  </ProcessorFramework.ProcessDef>-->
 
   <SoundDef>
     <defName>PF_Honk</defName>  

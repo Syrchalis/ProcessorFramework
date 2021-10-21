@@ -3,7 +3,7 @@
 	
 	<WorkGiverDef>
 		<defName>EmptyProcessor</defName>
-		<label>take product out of fermenter</label>
+		<label>empty processor</label>
 		<giverClass>ProcessorFramework.WorkGiver_EmptyProcessor</giverClass>
 		<workType>Hauling</workType>
 		<verb>take product</verb>
@@ -16,7 +16,7 @@
 	
 	<WorkGiverDef>
 		<defName>FillProcessor</defName>
-		<label>fill fermenter</label>
+		<label>fill processor</label>
 		<giverClass>ProcessorFramework.WorkGiver_FillProcessor</giverClass>
 		<workType>Hauling</workType>
 		<verb>fill</verb>

@@ -19,5 +19,7 @@ namespace ProcessorFramework
         public static SoundDef PF_Honk;
 
         public static ThingDef BarrelProcessor;
+
+        public static ReservationLayerDef PF_Empty;
     }
 }

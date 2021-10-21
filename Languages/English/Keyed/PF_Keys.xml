@@ -34,7 +34,7 @@
 	<PF_ContainsIngredientsGeneric>Contains {0} / {1} ingredients</PF_ContainsIngredientsGeneric>
 	<PF_ContainsIngredient>Contains {0} / {1} {INGREDIENTS}</PF_ContainsIngredient>
 	<PF_ContainsProduct>Contains {0} / {1} {PRODUCT_label} ({QUALITY})</PF_ContainsProduct>
-	<PF_NoIngredient>Empty</PF_NoIngredient>
+	<PF_NoIngredient>No ingredients</PF_NoIngredient>
 	<PF_Progress>Progress: {0} ({1})</PF_Progress>
 
 	<PF_NumProcessing>{0} {STACKS} processing</PF_NumProcessing>
