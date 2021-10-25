@@ -69,6 +69,8 @@
   <!-- ITab Process Selection -->
   <PF_ITab_ItemSelection>Processes</PF_ITab_ItemSelection>
   <PF_ApplySettings>Apply settings</PF_ApplySettings>
+  <PF_DestroyChanceTooltip>Chance processor will be destroyed when this product is retrieved</PF_DestroyChanceTooltip>
+  <PF_EfficiencyTooltip>Amount of ingredient needed for one product</PF_EfficiencyTooltip>
 
   <!-- ITab Process Contents -->
   <PF_TabProductFilter>Product</PF_TabProductFilter>

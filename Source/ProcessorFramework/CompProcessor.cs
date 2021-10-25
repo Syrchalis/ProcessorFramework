@@ -393,6 +393,10 @@ namespace ProcessorFramework
         {
             int num = Mathf.Min(ingredient.stackCount, Props.capacity - TotalIngredientCount);
             ProcessDef processDef = EnabledProcesses.First(x => x.ingredientFilter.Allows(ingredient));
+            if (num < ingredient.stackCount)
+            {
+                ingredient.SplitOff(ingredient.stackCount - num);
+            }
             bool emptyBefore = Empty;
             if (num > 0 && processDef != null)
             {
@@ -468,7 +472,7 @@ namespace ProcessorFramework
                 {
                     if (Rand.Chance(bonusOutput.chance))
                     {
-                        int amount = GenMath.RoundRandom((activeProcess.ingredientCount * activeProcess.processDef.capacityFactor / Props.capacity) * bonusOutput.amount);
+                        int amount = GenMath.RoundRandom(activeProcess.ingredientCount * activeProcess.processDef.capacityFactor / Props.capacity * bonusOutput.amount);
                         if (amount > 0)
                         {
                             if (bonusOutput.thingDef.race != null)
@@ -500,7 +504,7 @@ namespace ProcessorFramework
             activeProcesses.Remove(activeProcess);
 
             //Destroy chance
-            if (Rand.Chance(activeProcess.processDef.destroyChance))
+            if (Rand.Chance(activeProcess.processDef.destroyChance * activeProcess.ingredientCount * activeProcess.processDef.capacityFactor / Props.capacity))
             {
                 if (PF_Settings.replaceDestroyedProcessors)
                 {
@@ -592,7 +596,7 @@ namespace ProcessorFramework
                 else if (activeProcesses[0].SpeedFactor < 0.75f)
                     str.AppendTagged("PF_RunningSlow".Translate(activeProcesses[0].SpeedFactor.ToStringPercent(), activeProcesses[0].ActiveProcessPercent));
                 else
-                    str.AppendTagged("PF_RunningInfo".Translate(activeProcesses[0].ActiveProcessPercent));
+                    str.AppendTagged("PF_RunningInfo".Translate(activeProcesses[0].ActiveProcessPercent.ToStringPercent()));
             }
 
             str.AppendLine();

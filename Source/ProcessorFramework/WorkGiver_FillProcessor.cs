@@ -41,7 +41,7 @@ namespace ProcessorFramework
             if (!comp.EnabledProcesses.EnumerableNullOrEmpty())
             {
                 float minFactor = comp.EnabledProcesses.MinBy(x => x.capacityFactor).capacityFactor;
-                if (comp.unreservedSpaceLeft < minFactor)
+                if (Mathf.Min(comp.unreservedSpaceLeft, comp.SpaceLeft) < minFactor)
                 {
                     return false;
                 }

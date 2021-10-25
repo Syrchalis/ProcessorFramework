@@ -125,6 +125,24 @@ namespace ProcessorFramework
             }
 
             Widgets.Label(headerRect, processDef.thingDef.LabelCap);
+            if (processDef.destroyChance != 0)
+            {
+                Rect destroyChanceRect = new Rect(headerRect.width - 80, headerRect.y + 2, 32, 20f);
+                Text.Anchor = TextAnchor.UpperRight;
+                if (Mouse.IsOver(destroyChanceRect))
+                {
+                    GUI.color = ITab_Pawn_Gear.HighlightColor;
+                    GUI.DrawTexture(destroyChanceRect, TexUI.HighlightTex);
+                }
+                TooltipHandler.TipRegion(destroyChanceRect, () => "PF_DestroyChanceTooltip".Translate(), 23492389);
+                Text.Font = GameFont.Tiny;
+                GUI.color = Color.red;
+                Widgets.Label(destroyChanceRect, processDef.destroyChance.ToStringByStyle(ToStringStyle.PercentZero));
+                GUI.color = Color.white;
+                Text.Font = GameFont.Small;
+                Text.Anchor = TextAnchor.UpperLeft;
+
+            }
             Widgets.Checkbox(new Vector2(checkboxRect.xMin, checkboxRect.yMin), ref productAllowed, 20);
             localProductFilter.SetAllow(processDef.thingDef, productAllowed);
 
@@ -141,11 +159,20 @@ namespace ProcessorFramework
                     Widgets.Label(headerRect, ingredient.LabelCap);
                     if (processDef.efficiency != 1)
                     {
+                        Rect efficiencyRect = new Rect(headerRect.width - 70, headerRect.y + 2, 32, 20f);
+                        Text.Anchor = TextAnchor.UpperRight;
+                        if (Mouse.IsOver(efficiencyRect))
+                        {
+                            GUI.color = ITab_Pawn_Gear.HighlightColor;
+                            GUI.DrawTexture(efficiencyRect, TexUI.HighlightTex);
+                        }
+                        TooltipHandler.TipRegion(efficiencyRect, () => "PF_EfficiencyTooltip".Translate(), 23492389);
                         Text.Font = GameFont.Tiny;
                         GUI.color = Color.gray;
-                        Widgets.Label(new Rect(headerRect.width - 58f, headerRect.y + 2, 30f, 20f), "x" + (1f / processDef.efficiency).ToStringByStyle(ToStringStyle.FloatMaxTwo));
+                        Widgets.Label(efficiencyRect, "x" + (1f / processDef.efficiency).ToStringByStyle(ToStringStyle.FloatMaxTwo));
                         Text.Font = GameFont.Small;
                         GUI.color = Color.white;
+                        Text.Anchor = TextAnchor.UpperLeft;
                     }
                     Widgets.Checkbox(new Vector2(checkboxRect.xMin, checkboxRect.yMin), ref ingredientAllowed, 20);
                     localIngredientFilter.SetAllow(ingredient, ingredientAllowed);
