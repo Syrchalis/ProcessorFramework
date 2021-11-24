@@ -98,7 +98,8 @@ namespace ProcessorFramework
                 categoryOpen[processDef] = !open;
             }
 
-            Widgets.Label(headerRect, processDef.thingDef.LabelCap);
+            Widgets.DrawTextureFitted(new Rect(headerRect.x - 4, headerRect.y, 24, 24), ProcessorFramework_Utility.processIcons[processDef], 1);
+            Widgets.Label(new Rect(headerRect.x + 20, headerRect.y, 280, 24), processDef.thingDef.LabelCap);
             if (processDef.destroyChance != 0)
             {
                 Rect destroyChanceRect = new Rect(headerRect.width - 80, headerRect.y + 2, 32, 20f);
@@ -136,7 +137,8 @@ namespace ProcessorFramework
                 {
                     checkboxRect.y += lineHeight;
                     headerRect.y += lineHeight;
-                    Widgets.Label(headerRect, ingredient.LabelCap);
+                    Widgets.DrawTextureFitted(new Rect(headerRect.x - 4, headerRect.y, 24, 24), ProcessorFramework_Utility.ingredientIcons[ingredient], 1);
+                    Widgets.Label(new Rect(headerRect.x + 20, headerRect.y, 280, 24), ingredient.LabelCap);
                     if (processDef.efficiency != 1)
                     {
                         Rect efficiencyRect = new Rect(headerRect.width - 70, headerRect.y + 2, 32, 20f);

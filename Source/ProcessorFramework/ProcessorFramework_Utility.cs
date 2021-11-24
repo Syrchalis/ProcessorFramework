@@ -34,7 +34,8 @@ namespace ProcessorFramework
     {
         public static List<ProcessDef> allProcessDefs = new List<ProcessDef>();
 
-        public static Dictionary<ProcessDef, Command_Action> processGizmos = new Dictionary<ProcessDef, Command_Action>();
+        public static Dictionary<ProcessDef, Texture2D> processIcons = new Dictionary<ProcessDef, Texture2D>();
+        public static Dictionary<ThingDef, Texture2D> ingredientIcons = new Dictionary<ThingDef, Texture2D>();
         public static Dictionary<QualityCategory, Command_Action> qualityGizmos = new Dictionary<QualityCategory, Command_Action>();
 
         public static Dictionary<ProcessDef, Material> processMaterials = new Dictionary<ProcessDef, Material>();
@@ -86,7 +87,7 @@ namespace ProcessorFramework
 
         public static void RecacheAll() //Gets called in constructor and in writeSettings
         {
-            //RecacheProcessGizmos();
+            RecacheProcessIcons();
             RecacheProcessMaterials();
             RecacheQualityGizmos();
         }
@@ -108,38 +109,31 @@ namespace ProcessorFramework
             }
         }
 
-        /*public static void RecacheProcessGizmos()
+        public static void RecacheProcessIcons()
         {
-            processGizmos.Clear();
+            processIcons.Clear();
+            ingredientIcons.Clear();
             foreach (ThingDef thingDef in DefDatabase<ThingDef>.AllDefs.Where(x => x.HasComp(typeof(CompProcessor)))) //we grab every thingDef that has the PF comp
             {
                 if (thingDef.comps.Find(c => c.compClass == typeof(CompProcessor)) is CompProperties_Processor compPF)
                 {
-                    foreach (ProcessDef process in compPF.processes) //we loop again to make a gizmo for each process, now that we have a complete FloatMenuOption list
+                    foreach (ProcessDef processDef in compPF.processes) //we loop again to make an icon for each process
                     {
-                        Command_Process command_Process = new Command_Process
+                        if (!processIcons.ContainsKey(processDef))
                         {
-                            defaultLabel = process.customLabel != "" ? process.customLabel : process.thingDef.label,
-                            defaultDesc = "PF_NextDesc".Translate(process.thingDef.label, IngredientFilterSummary(process.ingredientFilter)),
-                            //activateSound = SoundDefOf.Tick_Tiny,
-                            icon = GetIcon(process.thingDef, PF_Settings.singleItemIcon),
-                            processToTarget = process,
-                            processOptions = compPF.processes
-                            
-                        };
-                        command_Process.action = () =>
+                            processIcons.Add(processDef, GetIcon(processDef.thingDef, PF_Settings.singleItemIcon));
+                        }
+                        foreach (ThingDef ingredientDef in processDef.ingredientFilter.AllowedThingDefs)
                         {
-                            FloatMenu floatMenu = new FloatMenu(command_Process.RightClickFloatMenuOptions.ToList())
+                            if (!ingredientIcons.ContainsKey(ingredientDef))
                             {
-                                vanishIfMouseDistant = true,
-                            };
-                            Find.WindowStack.Add(floatMenu);
-                        };
-                        processGizmos.Add(process, command_Process);
+                                ingredientIcons.Add(ingredientDef, GetIcon(ingredientDef, PF_Settings.singleItemIcon));
+                            }
+                        }
                     }
                 }
             }
-        }*/
+        }
 
         public static void RecacheProcessMaterials()
         {
