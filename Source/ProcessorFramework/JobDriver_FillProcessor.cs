@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -15,9 +15,6 @@ namespace ProcessorFramework
 		private const TargetIndex IngredientInd = TargetIndex.B;
 		private const int Duration = 200;
         private CompProcessor comp = null;
-        private bool succeeded = false;
-        private int stackCount;
-        private int carriedByPawn;
 
 		protected Thing Processor => job.GetTarget(TargetIndex.A).Thing;
 
@@ -25,22 +22,21 @@ namespace ProcessorFramework
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            return pawn.Reserve(Processor, job, 10, 0) && pawn.Reserve(Ingredient, job, 10, Mathf.Min(job.count, Ingredient.stackCount), null, errorOnFailed);
+            return pawn.Reserve(Processor, job, 1, -1) && pawn.Reserve(Ingredient, job, 1, job.count, null, errorOnFailed);
 		}
 
 		protected override IEnumerable<Toil> MakeNewToils()
 		{
             comp = Processor.TryGetComp<CompProcessor>();
-            float capacityFactor = comp.Props.processes.Find(x => x.ingredientFilter.Allows(Ingredient)).capacityFactor;
-            stackCount = Mathf.Min(Mathf.FloorToInt(comp.unreservedSpaceLeft / capacityFactor), pawn.carryTracker.AvailableStackSpace(Ingredient.def)); //Get optimal amount to carry
-            job.count = stackCount;
-            comp.unreservedSpaceLeft -= Mathf.CeilToInt(stackCount * capacityFactor); //Reserve space based on optimal carry amount
-            
+            ProcessDef processDef = comp.enabledProcesses.FirstOrDefault(y => y.Value.allowedIngredients.Contains(Ingredient.def)).Key;
+            if (processDef == null) Log.Error("Processor Framework: Unable to find enabled process that allows " + Ingredient.Label + " for " + Processor);
+            float capacityFactor = processDef.capacityFactor;
+
             this.FailOnDespawnedNullOrForbidden(ProcessorInd);
 			this.FailOnBurningImmobile(ProcessorInd);
             AddEndCondition(delegate
             {
-                if (comp.SpaceLeft < capacityFactor || !comp.ingredientFilter.Allows(Ingredient) || stackCount <= 0)
+                if (comp.SpaceLeftFor(processDef) < 1 || !comp.enabledProcesses.TryGetValue(processDef, out ProcessFilter processFilter) || !processFilter.allowedIngredients.Contains(Ingredient.def))
                 {
                     return JobCondition.Succeeded;
                 }
@@ -48,7 +44,7 @@ namespace ProcessorFramework
             });
 
             // Creating the toil before yielding allows for CheckForGetOpportunityDuplicate
-            Toil reserveIngredient = Toils_Reserve.Reserve(IngredientInd, 1, -1/*Mathf.Min(job.count, Ingredient.stackCount)*/);
+            Toil reserveIngredient = Toils_Reserve.Reserve(IngredientInd, 1, job.count);
 			yield return reserveIngredient;
             yield return Toils_Goto.GotoThing(IngredientInd, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(IngredientInd).FailOnSomeonePhysicallyInteracting(IngredientInd);
 			yield return Toils_Haul.StartCarryThing(IngredientInd, false, true, false).FailOnDestroyedNullOrForbidden(IngredientInd);
@@ -60,26 +56,10 @@ namespace ProcessorFramework
             // The Processor automatically destroys held ingredients
             Toil addIngredient = new Toil
             {
-                initAction = () => comp.AddIngredient(Ingredient),
+                initAction = () => comp.AddIngredient(Ingredient, processDef),
                 defaultCompleteMode = ToilCompleteMode.Instant,
             };
-            addIngredient.AddPreInitAction(delegate
-            {
-                carriedByPawn = pawn.carryTracker.CarriedThing.stackCount; //Get what pawn actually carries
-            });
-            addIngredient.AddFinishAction(delegate
-            {
-                succeeded = true; //Set flag that job succeeded and ingredients were in fact put into processor
-                comp.unreservedSpaceLeft += Mathf.CeilToInt((stackCount - carriedByPawn) * capacityFactor); //Release space that wasn't actually used in the end
-            });
             yield return addIngredient;
-            AddFinishAction(delegate
-            {
-                if (!succeeded)
-                {
-                    comp.unreservedSpaceLeft += Mathf.CeilToInt(stackCount * capacityFactor);
-                }
-            });
 		}
 	}
 }

@@ -21,14 +21,14 @@ namespace ProcessorFramework
 
 		public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-			return pawn.Reserve(Processor, job, Processor.TryGetComp<CompProcessor>().activeProcesses.Count(x => x.Complete), 0, DefOf.PF_Empty, errorOnFailed);
+			return pawn.Reserve(Processor, job, Processor.TryGetComp<CompProcessor>().activeProcesses.Count(x => x.Complete || x.Ruined), 0, DefOf.PF_Empty, errorOnFailed);
 		}
 
 		protected override IEnumerable<Toil> MakeNewToils()
 		{
 			CompProcessor comp = Processor.TryGetComp<CompProcessor>();
 			// Verify fermenter validity
-			this.FailOn(() => !comp.AnyComplete || comp.Empty);
+			this.FailOn(() => (!comp.AnyComplete && !comp.AnyRuined) || comp.Empty);
 			this.FailOnDestroyedNullOrForbidden(ProcessorInd);
 			AddEndCondition(delegate
 			{

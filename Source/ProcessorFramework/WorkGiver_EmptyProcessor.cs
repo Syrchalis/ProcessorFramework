@@ -25,7 +25,7 @@ namespace ProcessorFramework
         {
             CompProcessor comp = t.TryGetComp<CompProcessor>();
             return comp != null && (comp.AnyComplete || comp.AnyRuined) && !t.IsBurning() && !t.IsForbidden(pawn)
-                && pawn.CanReserveAndReach(t, PathEndMode.Touch, pawn.NormalMaxDanger(), comp.activeProcesses.Count(x => x.Complete), -1, DefOf.PF_Empty, forced);
+                && pawn.CanReserveAndReach(t, PathEndMode.Touch, pawn.NormalMaxDanger(), comp.activeProcesses.Count(x => x.Complete || x.Ruined), 0, DefOf.PF_Empty, forced);
         }
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)

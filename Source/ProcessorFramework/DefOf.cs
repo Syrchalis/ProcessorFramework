@@ -21,5 +21,7 @@ namespace ProcessorFramework
         public static ThingDef BarrelProcessor;
 
         public static ReservationLayerDef PF_Empty;
+
+        public static ProcessDef Beer;
     }
 }

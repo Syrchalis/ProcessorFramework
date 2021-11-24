@@ -81,6 +81,7 @@
     <Compile Include="ITab_ProcessorContents.cs" />
     <Compile Include="JobDriver_FillProcessor.cs" />
     <Compile Include="JobDriver_EmptyProcessor.cs" />
+    <Compile Include="ProcessFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Static_Bar.cs" />
     <Compile Include="Static_TexReloader.cs" />

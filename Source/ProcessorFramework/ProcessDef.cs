@@ -13,7 +13,7 @@ namespace ProcessorFramework
         public int uniqueID; //mainly for multiplayer
 
         public ThingDef thingDef;
-		public ThingFilter ingredientFilter = new ThingFilter();
+		public ThingFilter ingredientFilter = new ThingFilter(); //a ThingFilter is used here so modders can designate entire categories
 
         public float processDays = 6f;
         public float capacityFactor = 1;

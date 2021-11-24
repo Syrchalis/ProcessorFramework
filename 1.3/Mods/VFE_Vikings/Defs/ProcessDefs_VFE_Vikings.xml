@@ -9,8 +9,8 @@
       </thingDefs>
     </ingredientFilter>
     <processDays>6</processDays>
-    <efficiency>0.33333333</efficiency>
-    <capacityFactor>0.33333333</capacityFactor>
+    <efficiency>0.333</efficiency>
+    <capacityFactor>0.333</capacityFactor>
   </ProcessorFramework.ProcessDef>      
 
 </Defs>

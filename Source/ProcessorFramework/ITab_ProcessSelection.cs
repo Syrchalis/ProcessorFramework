@@ -15,13 +15,8 @@ namespace ProcessorFramework
     {
         private Vector2 scrollPosition;
 
-        private IEnumerable<CompProcessor> processors;
+        private IEnumerable<CompProcessor> processorComps;
         private Dictionary<ProcessDef, bool> categoryOpen = new Dictionary<ProcessDef, bool>();
-        private ThingFilter localProductFilter = null;
-        private ThingFilter localIngredientFilter = null;
-        
-        private Thing cachedThing; //The cachedThing is set at the end of FillTab and compared at the start, allowing the method to detect when the selected object changed
-        private bool callbackActive = false;
 
         private const int lineHeight = 22;
 
@@ -35,34 +30,24 @@ namespace ProcessorFramework
 
         protected override void FillTab()
         {
-            processors = Find.Selector.SelectedObjects.Select(o => (o as ThingWithComps)?.TryGetComp<CompProcessor>());
-            List<ProcessDef> processDefs = processors.First().Props.processes;
+            List<object> selectedObjects = Find.Selector.SelectedObjects;
+            processorComps = selectedObjects.Select(o => (o as ThingWithComps)?.TryGetComp<CompProcessor>());
+            
+            List<ProcessDef> processDefs = processorComps.First().Props.processes;
 
-            //Reset filters for the window every time a new object is selected so player can actually see how the object is configured
-            if (cachedThing != Find.Selector.SelectedObjects.First())
-            {
-                localProductFilter = null;
-                localIngredientFilter = null;
-            }
-
-            if (localProductFilter == null && localIngredientFilter == null)
-            {
-                ResetFilters();
-            }
-
-            if (processors.EnumerableNullOrEmpty())
+            if (processorComps.EnumerableNullOrEmpty())
             {
                 return;
             }
 
             Rect outRect = new Rect(default, size).ContractedBy(12f);
             outRect.yMin += 24; //top space
-            outRect.height -= 24; //height adjust
+            //outRect.height -= 24; //height adjust, not needed anymore since no apply button anymore
             int viewRectHeight = processDefs.Count * lineHeight + 80; //increase scroll area for each product listed and extra space at the end
             foreach (KeyValuePair<ProcessDef, bool> keyValuePair in categoryOpen)
             {
                 //adjust scroll area for each node opened
-                viewRectHeight += processDefs.Contains(keyValuePair.Key) && keyValuePair.Value ? keyValuePair.Key.ingredientFilter.AllowedDefCount * 24 : 0;
+                viewRectHeight += processDefs.Contains(keyValuePair.Key) && keyValuePair.Value ? keyValuePair.Key.ingredientFilter.AllowedDefCount * lineHeight : 0;
             }
             Rect viewRect = new Rect(0f, 0f, outRect.width - GUI.skin.verticalScrollbar.fixedWidth - 1f, viewRectHeight);
             Widgets.DrawMenuSection(outRect);
@@ -70,17 +55,17 @@ namespace ProcessorFramework
             Text.Font = GameFont.Small;
             if (Widgets.ButtonText(buttonRect, "ClearAll".Translate(), true, true, true))
             {
-                foreach (CompProcessor processor in processors)
+                foreach (CompProcessor processor in processorComps)
                 {
-                    localProductFilter.SetDisallowAll();
+                    processor.enabledProcesses.Clear();
                 }
                 SoundDefOf.Checkbox_TurnedOff.PlayOneShotOnCamera(null);
             }
             if (Widgets.ButtonText(new Rect(buttonRect.xMax + 1f, buttonRect.y, outRect.xMax - 1f - (buttonRect.xMax + 1f), 24f), "AllowAll".Translate(), true, true, true))
             {
-                foreach (ProcessDef processDef in processors.SelectMany(x => x.Props.processes))
+                foreach (CompProcessor processor in processorComps)
                 {
-                    localProductFilter.SetAllow(processDef.thingDef, true);
+                    processor.EnableAllProcesses();
                 }
                 SoundDefOf.Checkbox_TurnedOn.PlayOneShotOnCamera(null);
             }
@@ -93,29 +78,18 @@ namespace ProcessorFramework
                 {
                     categoryOpen.Add(processDef, false);
                 }
-                DoItemsList(ref listRect, processors, processDef);
+                DoItemsList(ref listRect, processDef);
             }
             Widgets.EndScrollView();
-            if (Widgets.ButtonText(new Rect(outRect.xMin + 24, outRect.yMax + 4, outRect.width - 48, 24f), "PF_ApplySettings".Translate()))
-            {
-                foreach (CompProcessor processor in processors)
-                {
-                    processor.productFilter.CopyAllowancesFrom(localProductFilter);
-                    processor.ingredientFilter.CopyAllowancesFrom(localIngredientFilter);
-                }
-                SoundDefOf.Click.PlayOneShotOnCamera(null);
-            }
-            cachedThing = Find.Selector.SelectedObjects.First() as Thing;
         }
-        public void DoItemsList(ref Rect listRect, IEnumerable<CompProcessor> processors, ProcessDef processDef)
+        public void DoItemsList(ref Rect listRect, ProcessDef processDef)
         {
-            bool productAllowed = localProductFilter.Allows(processDef.thingDef);
             bool open = categoryOpen[processDef];
             
             Rect headerRect = listRect.TopPartPixels(24);
             Rect arrowRect = new Rect(headerRect.x, headerRect.y, 18, 18);
             headerRect.xMin += 18;
-            Rect checkboxRect = headerRect.RightPartPixels(48);
+            Rect checkboxRect = new Rect(headerRect.x + headerRect.width - 48f, headerRect.y, 20, 20);
             Texture2D tex = open ? TexButton.Collapse : TexButton.Reveal;
             if (Widgets.ButtonImage(arrowRect, tex, true))
             {
@@ -141,10 +115,17 @@ namespace ProcessorFramework
                 GUI.color = Color.white;
                 Text.Font = GameFont.Small;
                 Text.Anchor = TextAnchor.UpperLeft;
-
             }
-            Widgets.Checkbox(new Vector2(checkboxRect.xMin, checkboxRect.yMin), ref productAllowed, 20);
-            localProductFilter.SetAllow(processDef.thingDef, productAllowed);
+
+            MultiCheckboxState processState = ProcessStateOf(processDef);
+            MultiCheckboxState multiCheckboxState = Widgets.CheckboxMulti(checkboxRect, processState, true);
+            if (processState != multiCheckboxState && multiCheckboxState != MultiCheckboxState.Partial)
+            {
+                foreach (CompProcessor compProcessor in processorComps)
+                {
+                    compProcessor.ToggleProcess(processDef, multiCheckboxState == MultiCheckboxState.On);
+                }
+            }
 
             if (open)
             {
@@ -155,7 +136,6 @@ namespace ProcessorFramework
                 {
                     checkboxRect.y += lineHeight;
                     headerRect.y += lineHeight;
-                    bool ingredientAllowed = localIngredientFilter.Allows(ingredient);
                     Widgets.Label(headerRect, ingredient.LabelCap);
                     if (processDef.efficiency != 1)
                     {
@@ -174,22 +154,48 @@ namespace ProcessorFramework
                         GUI.color = Color.white;
                         Text.Anchor = TextAnchor.UpperLeft;
                     }
-                    Widgets.Checkbox(new Vector2(checkboxRect.xMin, checkboxRect.yMin), ref ingredientAllowed, 20);
-                    localIngredientFilter.SetAllow(ingredient, ingredientAllowed);
+                    MultiCheckboxState ingredientState = IngredientStateOf(processDef, ingredient);
+                    MultiCheckboxState multiCheckboxState2 = Widgets.CheckboxMulti(checkboxRect, ingredientState, true);
+                    if (ingredientState != multiCheckboxState2 && multiCheckboxState2 != MultiCheckboxState.Partial)
+                    {
+                        foreach (CompProcessor compProcessor in processorComps)
+                        {
+                            compProcessor.ToggleIngredient(processDef, ingredient, multiCheckboxState2 == MultiCheckboxState.On);
+                        }
+                    }
                     listRect.y += lineHeight;
                 }
             }
             listRect.y += lineHeight;
         }
 
-        public void ResetFilters()
+        public MultiCheckboxState ProcessStateOf(ProcessDef processDef)
         {
-            localProductFilter = new ThingFilter(ProductFilterCallback);
-            localProductFilter.CopyAllowancesFrom(processors.First().productFilter);
-            localIngredientFilter = new ThingFilter(IngredientFilterCallback);
-            localIngredientFilter.CopyAllowancesFrom(processors.First().ingredientFilter);
+            int count = processorComps.Count(x => x.enabledProcesses.ContainsKey(processDef));
+            if (count > 0)
+            {
+                if (count == processorComps.Count())
+                {
+                    return MultiCheckboxState.On;
+                }
+                return MultiCheckboxState.Partial;
+            }
+            return MultiCheckboxState.Off;
         }
-
+        public MultiCheckboxState IngredientStateOf(ProcessDef processDef, ThingDef ingredient)
+        {
+            int count = processorComps.Count(x => x.enabledProcesses.TryGetValue(processDef, out ProcessFilter processFilter) && processFilter.allowedIngredients.Contains(ingredient));
+            if (count > 0)
+            {
+                if (count == processorComps.Count())
+                {
+                    return MultiCheckboxState.On;
+                }
+                return MultiCheckboxState.Partial;
+            }
+            return MultiCheckboxState.Off;
+        }
+        /*
         public void ProductFilterCallback()
         {
             if (callbackActive || localIngredientFilter == null)
@@ -207,7 +213,7 @@ namespace ProcessorFramework
                     }
                 }
             }
-            foreach (ProcessDef processDef in processors.First().Props.processes.Except(localEnabledProcesses))
+            foreach (ProcessDef processDef in processorComps.First().Props.processes.Except(localEnabledProcesses))
             {
                 if (processDef.ingredientFilter.AllowedThingDefs.SharesElementWith(localIngredientFilter.AllowedThingDefs))
                 {
@@ -229,7 +235,7 @@ namespace ProcessorFramework
             callbackActive = true;
             foreach (ThingDef ingredient in localIngredientFilter.AllowedThingDefs)
             {
-                ThingDef relatedProduct = processors.First().Props.processes.Find(x => x.ingredientFilter.Allows(ingredient)).thingDef;
+                ThingDef relatedProduct = processorComps.First().Props.processes.Find(x => x.ingredientFilter.Allows(ingredient)).thingDef;
                 if (!localProductFilter.Allows(relatedProduct))
                 {
                     localProductFilter.SetAllow(relatedProduct, true);
@@ -254,15 +260,15 @@ namespace ProcessorFramework
         {
             get
             {
-                if (!processors.EnumerableNullOrEmpty())
+                if (!processorComps.EnumerableNullOrEmpty())
                 {
                     foreach (ThingDef product in localProductFilter.AllowedThingDefs)
                     {
-                        yield return processors.First().Props.processes.Find(x => x.thingDef == product);
+                        yield return processorComps.First().Props.processes.Find(x => x.thingDef == product);
                     }
                 }
             }
-        }
+        }*/
     }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]

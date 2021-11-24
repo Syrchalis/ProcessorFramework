@@ -348,11 +348,12 @@ namespace ProcessorFramework
             {
                 foreach (CompProcessor comp in comps) 
                 {
-                    if (comp.Empty && !comp.EnabledProcesses.EnumerableNullOrEmpty())
+                    if (comp.Empty && !comp.enabledProcesses.EnumerableNullOrEmpty())
                     {
-                        Thing ingredient = ThingMaker.MakeThing(comp.EnabledProcesses.First().ingredientFilter.AnyAllowedDef);
-                        ingredient.stackCount = Mathf.FloorToInt(comp.SpaceLeft / comp.EnabledProcesses.First().capacityFactor);
-                        comp.AddIngredient(ingredient);
+                        ProcessDef processDef = comp.enabledProcesses.Keys.First();
+                        Thing ingredient = ThingMaker.MakeThing(processDef.ingredientFilter.AnyAllowedDef);
+                        ingredient.stackCount = comp.SpaceLeftFor(processDef);
+                        comp.AddIngredient(ingredient, processDef);
                     }
                 }
                 gooseAngle = Rand.Range(0, 360);

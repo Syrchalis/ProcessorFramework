@@ -28,7 +28,7 @@ namespace ProcessorFramework
             CompProcessor comp = t.Thing.TryGetComp<CompProcessor>();
             if (comp != null)
             {
-                return 1f / comp.unreservedSpaceLeft;
+                return 1f / comp.SpaceLeft;
             }
             return 0f;
         }
@@ -37,15 +37,11 @@ namespace ProcessorFramework
         {
             CompProcessor comp = t.TryGetComp<CompProcessor>();
 
-            if (comp == null) return false;
-            if (!comp.EnabledProcesses.EnumerableNullOrEmpty())
-            {
-                float minFactor = comp.EnabledProcesses.MinBy(x => x.capacityFactor).capacityFactor;
-                if (Mathf.Min(comp.unreservedSpaceLeft, comp.SpaceLeft) < minFactor)
-                {
-                    return false;
-                }
-            }
+            if (comp == null || comp.enabledProcesses.EnumerableNullOrEmpty()) return false;
+
+            ProcessDef smallestProcess = comp.enabledProcesses.Keys.MinBy(x => x.capacityFactor); //process with smallest capacity factor
+            if (comp.SpaceLeftFor(smallestProcess) < 1) return false; //check if enough space for one ingredient for smallest process
+
             if (!comp.TemperatureOk)
             {
                 JobFailReason.Is("BadTemperature".Translate().ToLower());
@@ -53,9 +49,9 @@ namespace ProcessorFramework
             }
 
             if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null
-                            || t.IsForbidden(pawn)
-                            || !pawn.CanReserveAndReach(t, PathEndMode.Touch, pawn.NormalMaxDanger(), 10, 0, null, forced)
-                            || t.IsBurning())
+                || t.IsForbidden(pawn)
+                || !pawn.CanReserveAndReach(t, PathEndMode.Touch, pawn.NormalMaxDanger(), 10, 0, null, forced)
+                || t.IsBurning())
             {
                 return false;
             }
@@ -72,46 +68,31 @@ namespace ProcessorFramework
         {
             CompProcessor comp = t.TryGetComp<CompProcessor>();
             Thing ingredient = FindIngredient(pawn, comp);
-            if (comp.queuedIngredient == null) comp.queuedIngredient = ingredient.def;
             Job job = new Job(DefOf.FillProcessor, t, ingredient)
             {
-                count = Mathf.Min(Mathf.FloorToInt(comp.unreservedSpaceLeft / comp.Props.processes.Find(x => x.ingredientFilter.Allows(ingredient)).capacityFactor), pawn.carryTracker.AvailableStackSpace(ingredient.def))
+                count = Mathf.Min(comp.SpaceLeftFor(comp.enabledProcesses.FirstOrDefault(y => y.Value.allowedIngredients.Contains(ingredient.def)).Key), ingredient.stackCount, pawn.carryTracker.AvailableStackSpace(ingredient.def))
             };
             return job;
         }
 
         private Thing FindIngredient(Pawn pawn, CompProcessor comp)
         {
-            if (comp is null)
-            {
-                return null;
-            }
-
-            ThingFilter filter;
-            if (comp.Props.parallelProcesses || (comp.Empty && comp.queuedIngredient == null))
-            {
-                filter = comp.ingredientFilter;
-            }
-            else if (!comp.activeProcesses.NullOrEmpty())
-            {
-                filter = comp.activeProcesses.First().processDef.ingredientFilter;
-            }
-            else
-            {
-                filter = comp.EnabledProcesses.First(x => x.ingredientFilter.Allows(comp.queuedIngredient)).ingredientFilter;
-            }
-            //Needs to check that there is enough ingredient for at least one product && needs to check that space left is enough to accomodate one ingredient before sending to JobDriver
+            //Needs to check that space left is enough to accomodate one ingredient before sending to JobDriver
             bool validator(Thing x)
             {
-                if (x.IsForbidden(pawn) || !filter.Allows(x)) return false;
-                ProcessDef processDef = comp.EnabledProcesses.First(y => y.ingredientFilter.Allows(x));
-                if (!pawn.CanReserve(x, 10, Mathf.Min(Mathf.FloorToInt(comp.unreservedSpaceLeft / processDef.capacityFactor), x.stackCount)) || x.stackCount < 1f / processDef.efficiency || comp.unreservedSpaceLeft < processDef.capacityFactor)
+                if (x.IsForbidden(pawn)) return false;
+
+                ProcessDef processDef = comp.enabledProcesses.FirstOrDefault(y => y.Value.allowedIngredients.Contains(x.def)).Key;
+                if (processDef == null) return false;
+
+                if (!pawn.CanReserve(x, 1, Mathf.Min(comp.SpaceLeftFor(processDef), x.stackCount, pawn.carryTracker.AvailableStackSpace(x.def))) 
+                    || comp.SpaceLeftFor(processDef) < 1)
                 {
                     return false;
                 }
                 return true;
             }
-            return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, filter.BestThingRequest, PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, validator);
+            return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, validator);
         }
     }
 }

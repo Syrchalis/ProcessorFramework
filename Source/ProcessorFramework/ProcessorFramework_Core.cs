@@ -105,7 +105,7 @@ namespace ProcessorFramework
                         CompProcessor compProcessor = newBarrel.TryGetComp<CompProcessor>();
                         Thing wort = ThingMaker.MakeThing(ThingDefOf.Wort, null);
                         wort.stackCount = fillCount;
-                        compProcessor.AddIngredient(wort);
+                        compProcessor.AddIngredient(wort, DefOf.Beer);
                         compProcessor.activeProcesses.Find(x => x.processDef.ingredientFilter.Allows(wort)).activeProcessTicks = Mathf.RoundToInt(6 * GenDate.TicksPerDay * progress);
                     }
                 }
