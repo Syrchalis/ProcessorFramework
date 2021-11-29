@@ -6,23 +6,21 @@
     <li>1.3</li>
 	</supportedVersions>
 	<packageId>syrchalis.processor.framework</packageId>
-	<description>A framework for autonomous transformation of ingredients into products inside objects
+	<description>A framework for processors to transform items and more, read player features!
 
-Processor framework is mainly aimed at mod authors who want to add any sort of processor to their mod or make an existing object a processor. A processor takes a set of ingredients and turns it autonomously into a product over a period of time. The framework supports a huge variety of settings to individualize the processes.
+Main Feature
+A processor takes a set of ingredients and turns it autonomously into a product over a period of time. The framework supports a huge variety of settings to individualize the processes and brings easy to use UI for players, as well as several other improvements, like better textures.
 
-[b]Players benefits:[/b]
-[list]
-[*] New HD barrel texture
-[*] Barrel can be made of any wood type
-[*] Brewery can be made of any wood type
-[*] ITab to quickly select products and ingredients
-[*] Products are shown on the processing building
-[*] Performance-improvements over vanilla
-[*] Button in settings to replace vanilla barrels
-[/list]
+Players benefits:
+- New HD barrel texture
+- Barrel can be made of any wood type
+- Brewery can be made of any wood type
+- ITab to quickly select products and ingredients
+- Products are shown on the processing building
+- Performance-improvements over vanilla
+- Button in settings to replace vanilla barrels
 
-[b]Mod developer features[/b]
-Refer to https://github.com/Syrchalis/ProcessorFramework/wiki</description>
+The mod is mainly aimed at mod authors who want to add any sort of processor to their mod or make an existing object a processor. Documentation can be found in the wiki on Github: https://github.com/Syrchalis/ProcessorFramework/wiki</description>
 	<loadBefore>
 		<li>Owlchemist.SimpleChains.Leather</li>
 		<li>Owlchemist.SimpleChains.Lumber</li>

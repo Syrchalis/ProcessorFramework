@@ -98,8 +98,13 @@ namespace ProcessorFramework
                 categoryOpen[processDef] = !open;
             }
 
-            Widgets.DrawTextureFitted(new Rect(headerRect.x - 4, headerRect.y, 24, 24), ProcessorFramework_Utility.processIcons[processDef], 1);
-            Widgets.Label(new Rect(headerRect.x + 20, headerRect.y, 280, 24), processDef.thingDef.LabelCap);
+            if (PF_Settings.productIcon)
+            {
+                headerRect.x += 20;
+                Widgets.DrawTextureFitted(new Rect(headerRect.x - 24, headerRect.y, 24, 24), ProcessorFramework_Utility.productIcons[processDef], 1);
+            }
+
+            Widgets.Label(headerRect, processDef.thingDef.LabelCap);
             if (processDef.destroyChance != 0)
             {
                 Rect destroyChanceRect = new Rect(headerRect.width - 80, headerRect.y + 2, 32, 20f);
@@ -133,12 +138,18 @@ namespace ProcessorFramework
                 headerRect.xMin += 12;
                 List<ThingDef> sortedIngredients = processDef.ingredientFilter.AllowedThingDefs.ToList();
                 sortedIngredients.SortBy(x => x.label);
+
+                //if (PF_Settings.ingredientIcon || PF_Settings.productIcon) headerRect.x += 20;
                 foreach (ThingDef ingredient in sortedIngredients)
                 {
                     checkboxRect.y += lineHeight;
                     headerRect.y += lineHeight;
-                    Widgets.DrawTextureFitted(new Rect(headerRect.x - 4, headerRect.y, 24, 24), ProcessorFramework_Utility.ingredientIcons[ingredient], 1);
-                    Widgets.Label(new Rect(headerRect.x + 20, headerRect.y, 280, 24), ingredient.LabelCap);
+
+                    if (PF_Settings.ingredientIcon)
+                    {
+                        Widgets.DrawTextureFitted(new Rect(headerRect.x - 24, headerRect.y, 24, 24), ProcessorFramework_Utility.ingredientIcons[ingredient], 1);
+                    }
+                    Widgets.Label(headerRect, ingredient.LabelCap);
                     if (processDef.efficiency != 1)
                     {
                         Rect efficiencyRect = new Rect(headerRect.width - 70, headerRect.y + 2, 32, 20f);

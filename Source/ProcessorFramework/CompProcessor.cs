@@ -126,6 +126,15 @@ namespace ProcessorFramework
                 parent.def.inspectorTabsResolved.Add(InspectTabManager.GetSharedInstance(typeof(ITab_ProcessSelection)));
                 parent.def.inspectorTabsResolved.Add(InspectTabManager.GetSharedInstance(typeof(ITab_ProcessorContents)));
             }
+
+            if (PF_Settings.initialProcessState == PF_Settings.InitialProcessState.firstonly)
+            {
+                ToggleProcess(Props.processes.First(), true);
+            }
+            else if (PF_Settings.initialProcessState == PF_Settings.InitialProcessState.enabled)
+            {
+                EnableAllProcesses();
+            }
         }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
@@ -359,8 +368,11 @@ namespace ProcessorFramework
 
         public int SpaceLeftFor(ProcessDef processDef)
         {
-            int value = Mathf.FloorToInt((Props.capacity - activeProcesses.Sum(x => x.ingredientCount * x.processDef.capacityFactor)) / processDef.capacityFactor);
-            return value;
+            if (!activeProcesses.NullOrEmpty() && !Props.parallelProcesses && processDef != activeProcesses.First().processDef)
+            {
+                return 0;
+            }
+            return Mathf.FloorToInt((Props.capacity - activeProcesses.Sum(x => x.ingredientCount * x.processDef.capacityFactor)) / processDef.capacityFactor);
         }
 
         public void DoTicks(int ticks)

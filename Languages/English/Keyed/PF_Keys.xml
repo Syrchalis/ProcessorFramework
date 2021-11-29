@@ -11,10 +11,20 @@
 	<PF_ShowCurrentQualityIconTooltip>Shows an icon next to the progress bar that indicates the current quality of the product (default: true)</PF_ShowCurrentQualityIconTooltip>
 	<PF_ShowTargetQualityIcon>Show target quality icon</PF_ShowTargetQualityIcon>
 	<PF_ShowTargetQualityIconTooltip>Shows an icon next to the process icon that indicates the target quality set, only works if 'show process icon' is true (default: false)</PF_ShowTargetQualityIconTooltip>
-	<PF_SingleItemIcon>Single item icon</PF_SingleItemIcon>
+	<PF_SingleItemIcon>Single item icons</PF_SingleItemIcon>
 	<PF_SingleItemIconTooltip>If enabled will use icons that resemble a single item, otherwise will use icons that resemble a full stack (default: true)</PF_SingleItemIconTooltip>
-	<PF_SortAlphabetically>Sort list alphabetically</PF_SortAlphabetically>
-	<PF_SortAlphabeticallyTooltip>If enabled will sort list when clicking on the button to change process alphabetically, otherwise will sort by thingDef list (default: false)</PF_SortAlphabeticallyTooltip>
+  <PF_ProductIcon>Show product icon</PF_ProductIcon>
+  <PF_ProductIconTooltip>Displays icons next to products in the process selection inspector tab</PF_ProductIconTooltip>
+  <PF_IngredientIcon>Show ingredient icon</PF_IngredientIcon>
+  <PF_IngredientIconTooltip>Displays icons next to ingredients in the process selection inspector tab</PF_IngredientIconTooltip>
+  <PF_initialProcessState>Default configuration of processes</PF_initialProcessState>
+  <PF_initialProcessStateTooltip>This setting controls how newly built processors have their processes toggled</PF_initialProcessStateTooltip>
+  <PF_firstOnly>First only</PF_firstOnly>
+  <PF_firstOnlyTooltip>Only the first process on newly built processors is enabled</PF_firstOnlyTooltip>
+  <PF_allEnabled>Enabled</PF_allEnabled>
+  <PF_allEnabledTooltip>All processes on newly built processors are enabled</PF_allEnabledTooltip>
+  <PF_allDisabled>Disabled</PF_allDisabled>
+  <PF_allDisabledTooltip>All processes on newly built processors are disabled</PF_allDisabledTooltip>
   <PF_defaultQuality>Default target quality</PF_defaultQuality>
   <PF_defaultQualityTooltip>Which target quality is set by default for processes that use quality</PF_defaultQualityTooltip>
   <PF_replaceDestroyedProcessors>Replace destroyed processors</PF_replaceDestroyedProcessors>

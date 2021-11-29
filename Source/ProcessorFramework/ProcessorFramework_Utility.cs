@@ -34,7 +34,7 @@ namespace ProcessorFramework
     {
         public static List<ProcessDef> allProcessDefs = new List<ProcessDef>();
 
-        public static Dictionary<ProcessDef, Texture2D> processIcons = new Dictionary<ProcessDef, Texture2D>();
+        public static Dictionary<ProcessDef, Texture2D> productIcons = new Dictionary<ProcessDef, Texture2D>();
         public static Dictionary<ThingDef, Texture2D> ingredientIcons = new Dictionary<ThingDef, Texture2D>();
         public static Dictionary<QualityCategory, Command_Action> qualityGizmos = new Dictionary<QualityCategory, Command_Action>();
 
@@ -111,7 +111,7 @@ namespace ProcessorFramework
 
         public static void RecacheProcessIcons()
         {
-            processIcons.Clear();
+            productIcons.Clear();
             ingredientIcons.Clear();
             foreach (ThingDef thingDef in DefDatabase<ThingDef>.AllDefs.Where(x => x.HasComp(typeof(CompProcessor)))) //we grab every thingDef that has the PF comp
             {
@@ -119,9 +119,9 @@ namespace ProcessorFramework
                 {
                     foreach (ProcessDef processDef in compPF.processes) //we loop again to make an icon for each process
                     {
-                        if (!processIcons.ContainsKey(processDef))
+                        if (!productIcons.ContainsKey(processDef))
                         {
-                            processIcons.Add(processDef, GetIcon(processDef.thingDef, PF_Settings.singleItemIcon));
+                            productIcons.Add(processDef, GetIcon(processDef.thingDef, PF_Settings.singleItemIcon));
                         }
                         foreach (ThingDef ingredientDef in processDef.ingredientFilter.AllowedThingDefs)
                         {

@@ -39,7 +39,8 @@ namespace ProcessorFramework
 
             if (comp == null || comp.enabledProcesses.EnumerableNullOrEmpty()) return false;
 
-            ProcessDef smallestProcess = comp.enabledProcesses.Keys.MinBy(x => x.capacityFactor); //process with smallest capacity factor
+            ProcessDef smallestProcess = comp.Props.parallelProcesses || comp.activeProcesses.NullOrEmpty() ? comp.enabledProcesses.Keys.MinBy(x => x.capacityFactor) : comp.activeProcesses.First().processDef; 
+            //process with smallest capacity factor, if not empty and no parallel processes the current active process is taken instead
             if (comp.SpaceLeftFor(smallestProcess) < 1) return false; //check if enough space for one ingredient for smallest process
 
             if (!comp.TemperatureOk)

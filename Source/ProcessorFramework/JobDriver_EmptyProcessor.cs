@@ -21,7 +21,7 @@ namespace ProcessorFramework
 
 		public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-			return pawn.Reserve(Processor, job, Processor.TryGetComp<CompProcessor>().activeProcesses.Count(x => x.Complete || x.Ruined), 0, DefOf.PF_Empty, errorOnFailed);
+			return pawn.Reserve(Processor, job, 1, -1, DefOf.PF_Empty, errorOnFailed);
 		}
 
 		protected override IEnumerable<Toil> MakeNewToils()
@@ -49,7 +49,7 @@ namespace ProcessorFramework
             {
                 initAction = () =>
                 {
-					ActiveProcess activeProcess = comp.activeProcesses.Find(x => x.Complete || x.Ruined);
+					ActiveProcess activeProcess = comp.activeProcesses.FirstOrDefault(x => x.Complete || x.Ruined);
 					if (activeProcess == null)
                     {
 						EndJobWith(JobCondition.Incompletable);
