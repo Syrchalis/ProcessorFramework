@@ -41,9 +41,9 @@
   <PF_dontEmptyDescription>Cancels the designation for this processor to be emptied</PF_dontEmptyDescription>
 
 	<!-- Inspector Strings -->
-	<PF_ContainsIngredientsGeneric>Contains {0} / {1} ingredients</PF_ContainsIngredientsGeneric>
-	<PF_ContainsIngredient>Contains {0} / {1} {INGREDIENTS}</PF_ContainsIngredient>
-	<PF_ContainsProduct>Contains {0} / {1} {PRODUCT_label} ({QUALITY})</PF_ContainsProduct>
+	<PF_ContainsIngredientsGeneric>Capacity: {0} / {1}</PF_ContainsIngredientsGeneric>
+	<PF_ContainsIngredient>Capacity: {0} / {1} {INGREDIENTS}</PF_ContainsIngredient>
+	<PF_ContainsProduct>Capacity: {0} / {1} {PRODUCT_label} ({QUALITY})</PF_ContainsProduct>
 	<PF_NoIngredient>No ingredients</PF_NoIngredient>
 	<PF_Progress>Progress: {0} ({1})</PF_Progress>
 
@@ -86,7 +86,7 @@
   <PF_TabProductFilter>Product</PF_TabProductFilter>
 	<PF_TabIngredientFilter>Filter</PF_TabIngredientFilter>
 	<PF_TabContents>Contents</PF_TabContents>
-	<PF_FermentingItems>Processing Items</PF_FermentingItems>
+	<PF_FermentingItems>Ingredients</PF_FermentingItems>
 	<PF_Product>Product</PF_Product>
 	<PF_TargetQuality>Target</PF_TargetQuality>
   <PF_CreatingTooltip1>Creating {PRODUCT}{QUALITY} from {INGREDIENT}.\n</PF_CreatingTooltip1>

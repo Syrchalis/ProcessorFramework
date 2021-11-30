@@ -585,11 +585,15 @@ namespace ProcessorFramework
                     ActiveProcess progress = activeProcesses[0];
                     str.AppendTagged("PF_ContainsProduct".Translate(TotalIngredientCount, Props.capacity, singleDef.thingDef.Named("PRODUCT"), progress.CurrentQuality.GetLabel().ToLower().Named("QUALITY")));
                 }
-                else
+                else if (!activeProcesses.First().ingredientThings.NullOrEmpty())
                 {
                     // Usually this will only be one def label shown
-                    string ingredientLabels = activeProcesses.First().ingredientThings.Distinct().Select(x => x.Label).Join();
+                    string ingredientLabels = activeProcesses.First().ingredientThings.Distinct().Select(x => x.LabelNoCount).Join();
                     str.AppendTagged("PF_ContainsIngredient".Translate(TotalIngredientCount, Props.capacity, ingredientLabels.Named("INGREDIENTS")));
+                }
+                else
+                {
+                    str.AppendTagged("PF_ContainsIngredientsGeneric".Translate(TotalIngredientCount, Props.capacity));
                 }
             }
             else
