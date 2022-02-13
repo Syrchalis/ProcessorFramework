@@ -123,11 +123,15 @@ namespace ProcessorFramework
         }
 
         /// <summary>Used when processes are not independent.</summary>
-        public void MergeProcess(Thing thing)
+        public void MergeProcess(Thing ingredient)
         {
-            activeProcessTicks = Mathf.RoundToInt(GenMath.WeightedAverage(0f, thing.stackCount, activeProcessTicks, ingredientCount));
-            ingredientCount += thing.stackCount;
-            ingredientThings.Add(thing);
+            activeProcessTicks = Mathf.RoundToInt(GenMath.WeightedAverage(0f, ingredient.stackCount, activeProcessTicks, ingredientCount));
+            ingredientCount += ingredient.stackCount;
+            if (!ingredientThings.Any(x => x.CanStackWith(ingredient)))
+            {
+                ingredientThings.Add(ingredient);
+            }
+            processor.innerContainer.TryAddOrTransfer(ingredient, true);
         }
 
         private float CalcSpeedFactor()

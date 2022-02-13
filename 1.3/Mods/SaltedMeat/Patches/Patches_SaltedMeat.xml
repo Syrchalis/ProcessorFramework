@@ -95,6 +95,14 @@
           </ProcessorFramework.ProcessDef>
           </value>
         </li>
+        <li Class="PatchOperationAdd">
+          <xpath>/Defs/ProcessorFramework.ProcessDef[defName = "SM_SaltedMeat"]/ingredientFilter</xpath>
+          <value>
+            <disallowedCategories>
+              <li>VCEF_RawFishCategory</li>
+            </disallowedCategories>
+          </value>
+        </li>
         <li Class="PatchOperationReplace">
         <xpath>*/ThingDef[defName = "SM_FishDrier"]/comps/li[@Class="ItemProcessor.CompProperties_ItemProcessor"]</xpath>
           <value>
