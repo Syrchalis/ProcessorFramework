@@ -21,7 +21,8 @@ namespace ProcessorFramework
         public override bool Prioritized => true;
         public override bool ShouldSkip(Pawn pawn, bool forced = false)
         {
-            return !pawn.Map.GetComponent<MapComponent_Processors>().thingsWithProcessorComp.Any();
+            MapComponent_Processors mapComp = pawn.Map.GetComponent<MapComponent_Processors>();
+            return !mapComp.thingsWithProcessorComp.Any();
         }
         public override float GetPriority(Pawn pawn, TargetInfo t)
         {
@@ -56,6 +57,7 @@ namespace ProcessorFramework
             {
                 return false;
             }
+
             if (FindIngredient(pawn, comp) == null)
             {
                 JobFailReason.Is("PF_NoIngredient".Translate());
@@ -79,9 +81,13 @@ namespace ProcessorFramework
         private Thing FindIngredient(Pawn pawn, CompProcessor comp)
         {
             //Needs to check that space left is enough to accomodate one ingredient before sending to JobDriver
+            HashSet<ThingDef> validIngredients = comp.ValidIngredients;
+
             bool validator(Thing x)
             {
                 if (x.IsForbidden(pawn)) return false;
+
+                if (!validIngredients.Contains(x.def)) return false;
 
                 ProcessDef processDef = comp.enabledProcesses.FirstOrDefault(y => y.Value.allowedIngredients.Contains(x.def)).Key;
                 if (processDef == null) return false;
@@ -93,7 +99,7 @@ namespace ProcessorFramework
                 }
                 return true;
             }
-            return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, validator);
+            return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, validator, pawn.Map.GetComponent<MapComponent_Processors>().PotentialIngredients);
         }
     }
 }

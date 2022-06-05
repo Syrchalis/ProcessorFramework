@@ -36,6 +36,18 @@ namespace ProcessorFramework
         public bool AnyComplete => activeProcesses.Any(x => x.Complete);
         public int SpaceLeft => Props.capacity - TotalIngredientCount;
         public int TotalIngredientCount => Mathf.CeilToInt(activeProcesses.Sum(x => x.ingredientCount * x.processDef.capacityFactor));
+        public HashSet<ThingDef> ValidIngredients
+        {
+            get
+            {
+                HashSet<ThingDef> validIngredients = new HashSet<ThingDef>();
+                foreach (ProcessFilter processFilter in enabledProcesses.Values)
+                {
+                    validIngredients.AddRange(processFilter.allowedIngredients);
+                }
+                return validIngredients;
+            }
+        }
         public bool TemperatureOk
         {
             get
@@ -396,7 +408,8 @@ namespace ProcessorFramework
         }
         public void ConsumeFuel(int ticks)
         {
-            if (refuelComp == null || parent.def.tickerType == TickerType.Normal) return;
+            if (refuelComp == null) return;
+            if (parent.def.tickerType == TickerType.Normal && !refuelComp.Props.consumeFuelOnlyWhenUsed) return; //in this case the fuel comp will handle the consumption
             if (!Fueled || !FlickedOn) return;
             if (refuelComp.Props.consumeFuelOnlyWhenUsed && Empty) return;
             if (refuelComp.Props.consumeFuelOnlyWhenPowered && !Powered) return;

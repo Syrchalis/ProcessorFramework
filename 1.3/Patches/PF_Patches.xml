@@ -2,9 +2,12 @@
 <Patch>
   
   <!-- Soft-removes normal fermenting barrel -->
-	<Operation Class="PatchOperationRemove">
-	  <xpath>Defs/ThingDef[defName = "FermentingBarrel"]/designationCategory</xpath>
-	</Operation>
+  	<Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[defName = "FermentingBarrel"]/designationCategory</xpath>
+    <match Class="PatchOperationRemove">
+			<xpath>Defs/ThingDef[defName = "FermentingBarrel"]/designationCategory</xpath>
+    </match>
+  </Operation>
 
 	<!-- Instead of removing the WorkGiver class gets replaced so it doesn't scan the map anymore -->
 	<Operation Class="PatchOperationReplace">

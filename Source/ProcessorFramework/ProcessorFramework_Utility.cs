@@ -15,10 +15,30 @@ namespace ProcessorFramework
     {
         [Unsaved(false)]
         public List<ThingWithComps> thingsWithProcessorComp = new List<ThingWithComps>();
+        public List<Thing> cachedMapIngredients = new List<Thing>();
+        public int lastTick = 0;
 
         public MapComponent_Processors(Map map) : base(map)
         {
         }
+
+        public List<Thing> PotentialIngredients
+        {
+            get
+            {
+                if (Find.TickManager.TicksGame > lastTick + 300)
+                {
+                    cachedMapIngredients.Clear();
+                    foreach (ThingDef ingredientDef in ProcessorFramework_Utility.ingredientIcons.Keys)
+                    {
+                        cachedMapIngredients.AddRange(map.listerThings.ThingsOfDef(ingredientDef));
+                    }
+                    lastTick = Find.TickManager.TicksGame;
+                }
+                return cachedMapIngredients;
+            }
+        }
+
         public void Register(ThingWithComps thing)
         {
             thingsWithProcessorComp.Add(thing);
@@ -265,6 +285,7 @@ namespace ProcessorFramework
             {
                 floatMenuOptions.Add(new FloatMenuOption("Fill object", () => FillObject(comps)));
             }
+            //floatMenuOptions.Add(new FloatMenuOption("Fix Error", () => FixNREingredientThings(comps)));
             return floatMenuOptions;
         }
 
@@ -352,6 +373,17 @@ namespace ProcessorFramework
                 }
                 gooseAngle = Rand.Range(0, 360);
                 SoundStarter.PlayOneShotOnCamera(DefOf.PF_Honk);
+            }
+        }
+
+        internal static void FixNREingredientThings(IEnumerable<CompProcessor> comps)
+        {
+            foreach (CompProcessor comp in comps)
+            {
+                foreach (ActiveProcess activeProcess in comp.activeProcesses)
+                {
+                    activeProcess.ingredientThings.RemoveAll(x => x == null);
+                }
             }
         }
 

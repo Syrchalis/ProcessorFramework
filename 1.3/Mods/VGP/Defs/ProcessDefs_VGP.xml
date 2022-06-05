@@ -6,7 +6,7 @@
     <thingDef>rum</thingDef>
     <ingredientFilter>
       <thingDefs>
-        <li>Wort</li>
+        <li>VG_CaneMash</li>
       </thingDefs>
     </ingredientFilter>
     <processDays>6</processDays>
